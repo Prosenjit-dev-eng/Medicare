@@ -131,7 +131,7 @@ function Navbar() {
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-50 dark:bg-slate-800 hover:bg-emerald-100 dark:hover:bg-slate-700 text-emerald-800 dark:text-emerald-300 text-xs sm:text-sm font-bold border border-emerald-200 dark:border-slate-700 transition-colors"
             >
               <User className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>Doctor Admin</span>
+              <span>Doctor/Admin</span>
               <ExternalLink className="w-3 h-3 opacity-60" />
             </a>
 
@@ -207,7 +207,7 @@ function Navbar() {
                 className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-slate-800 text-emerald-800 dark:text-emerald-300 text-sm font-bold border border-emerald-200 dark:border-slate-700"
               >
                 <User className="w-4 h-4 text-emerald-600" />
-                <span>Doctor Admin Portal</span>
+                <span>Doctor/Admin</span>
                 <ExternalLink className="w-3.5 h-3.5 opacity-60" />
               </a>
 
