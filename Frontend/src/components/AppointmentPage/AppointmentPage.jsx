@@ -25,6 +25,7 @@ function AppointmentPage() {
   const [serviceAppointments, setServiceAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [paymentNotice, setPaymentNotice] = useState(null);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
   // Check for Stripe Checkout return redirect
   useEffect(() => {
@@ -35,7 +36,7 @@ function AppointmentPage() {
 
     if (sessionId && status === "success") {
       if (appointmentId) {
-        fetch(`http://localhost:4000/api/appointments/confirm?session_id=${sessionId}&appointment_id=${appointmentId}`)
+        fetch(`${API_BASE_URL}/appointments/confirm?session_id=${sessionId}&appointment_id=${appointmentId}`)
           .then((res) => res.json())
           .then((data) => {
             if (data.success) {
@@ -46,7 +47,7 @@ function AppointmentPage() {
           .catch((e) => console.warn(e));
       } else if (serviceAppointmentId) {
         fetch(
-          `http://localhost:4000/api/service-appointments/confirm?session_id=${sessionId}&service_appointment_id=${serviceAppointmentId}`
+          `${API_BASE_URL}/service-appointments/confirm?session_id=${sessionId}&service_appointment_id=${serviceAppointmentId}`
         )
           .then((res) => res.json())
           .then((data) => {
@@ -87,13 +88,13 @@ function AppointmentPage() {
       if (clerkUserId) srvParams.append("createdBy", clerkUserId);
       if (userEmail) srvParams.append("email", userEmail);
 
-      const resDoc = await fetch(`http://localhost:4000/api/appointments?${docParams.toString()}`);
+      const resDoc = await fetch(`${API_BASE_URL}/appointments?${docParams.toString()}`);
       const dataDoc = await resDoc.json();
       if (dataDoc.success && dataDoc.appointments) {
         serverDocs = dataDoc.appointments;
       }
 
-      const resSrv = await fetch(`http://localhost:4000/api/service-appointments?${srvParams.toString()}`);
+      const resSrv = await fetch(`${API_BASE_URL}/service-appointments?${srvParams.toString()}`);
       const dataSrv = await resSrv.json();
       if (dataSrv.success && dataSrv.appointments) {
         serverSrvs = dataSrv.appointments;

@@ -14,7 +14,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
 function AddService() {
   const navigate = useNavigate();
@@ -105,7 +105,7 @@ function AddService() {
         formData.append("image", imageFile);
       }
 
-      const res = await fetch(`${API_BASE}/api/services`, {
+      const res = await fetch(`${API_BASE}/services`, {
         method: "POST",
         body: formData,
       });

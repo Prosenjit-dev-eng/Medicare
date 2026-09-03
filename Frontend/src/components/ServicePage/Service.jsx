@@ -158,9 +158,11 @@ function Service() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingError, setBookingError] = useState("");
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
+
   const fetchServices = (q) => {
     setLoading(true);
-    let url = `http://localhost:4000/api/services?limit=20`;
+    let url = `${API_BASE_URL}/services?limit=20`;
     if (q) url += `&q=${encodeURIComponent(q)}`;
 
     fetch(url)
@@ -281,7 +283,7 @@ function Service() {
     setBookingError("");
 
     try {
-      const res = await fetch("http://localhost:4000/api/service-appointments", {
+      const res = await fetch(`${API_BASE_URL}/service-appointments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

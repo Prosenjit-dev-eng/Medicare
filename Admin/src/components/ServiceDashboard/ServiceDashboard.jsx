@@ -12,7 +12,7 @@ import {
   Clock,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
 function ServiceDashboard() {
   const [stats, setStats] = useState({
@@ -30,13 +30,13 @@ function ServiceDashboard() {
     async function loadServiceData() {
       setLoading(true);
       try {
-        const resStats = await fetch(`${API_BASE}/api/service-appointments/stats/summary`);
+        const resStats = await fetch(`${API_BASE}/service-appointments/stats/summary`);
         const dataStats = await resStats.json();
 
-        const resBookings = await fetch(`${API_BASE}/api/service-appointments?limit=6`);
+        const resBookings = await fetch(`${API_BASE}/service-appointments?limit=6`);
         const dataBookings = await resBookings.json();
 
-        const resServices = await fetch(`${API_BASE}/api/services?limit=6`);
+        const resServices = await fetch(`${API_BASE}/services?limit=6`);
         const dataServices = await resServices.json();
 
         if (dataStats.success && dataStats.stats) {

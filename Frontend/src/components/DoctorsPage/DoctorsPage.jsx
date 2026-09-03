@@ -169,9 +169,11 @@ function DoctorsPage() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingError, setBookingError] = useState("");
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
+
   const fetchDoctors = (q = "", spec = "All") => {
     setLoading(true);
-    let url = `http://localhost:4000/api/doctors?`;
+    let url = `${API_BASE_URL}/doctors?`;
     if (q) url += `q=${encodeURIComponent(q)}&`;
     if (spec && spec !== "All") url += `specialization=${encodeURIComponent(spec)}&`;
 
@@ -294,7 +296,7 @@ function DoctorsPage() {
     setBookingError("");
 
     try {
-      const res = await fetch("http://localhost:4000/api/appointments", {
+      const res = await fetch(`${API_BASE_URL}/appointments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

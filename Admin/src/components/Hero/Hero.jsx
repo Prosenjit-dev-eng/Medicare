@@ -74,10 +74,11 @@ function Hero({ onLoginSuccess }) {
     setSuccessMsg("");
 
     try {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
       const endpoint =
         roleMode === "doctor"
-          ? "http://localhost:4000/api/doctors/login"
-          : "http://localhost:4000/api/users/login";
+          ? `${API_BASE_URL}/doctors/login`
+          : `${API_BASE_URL}/users/login`;
 
       const res = await fetch(endpoint, {
         method: "POST",

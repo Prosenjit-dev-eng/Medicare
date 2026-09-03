@@ -15,7 +15,7 @@ import {
   DollarSign,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
 function ListPage() {
   const [doctors, setDoctors] = useState([]);
@@ -26,7 +26,7 @@ function ListPage() {
   const fetchDoctors = async () => {
     setLoading(true);
     try {
-      let url = `${API_BASE}/api/doctors?limit=100`;
+      let url = `${API_BASE}/doctors?limit=100`;
       if (searchQuery) url += `&q=${encodeURIComponent(searchQuery)}`;
       const res = await fetch(url);
       const data = await res.json();
@@ -79,7 +79,7 @@ function ListPage() {
 
   const handleToggleAvailability = async (id, currentStatus) => {
     try {
-      const res = await fetch(`${API_BASE}/api/doctors/${id}/toggle-availability`, {
+      const res = await fetch(`${API_BASE}/doctors/${id}/toggle-availability`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("doctorToken_v1") || ""}`,
@@ -101,7 +101,7 @@ function ListPage() {
   const handleDeleteDoctor = async (id) => {
     if (!window.confirm("Are you sure you want to remove this doctor from the portal?")) return;
     try {
-      const res = await fetch(`${API_BASE}/api/doctors/${id}`, {
+      const res = await fetch(`${API_BASE}/doctors/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("doctorToken_v1") || ""}`,

@@ -18,7 +18,7 @@ import {
   FileText,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
 function DashboardPage() {
   const [stats, setStats] = useState({
@@ -44,13 +44,13 @@ function DashboardPage() {
     async function loadDashboardData() {
       setLoading(true);
       try {
-        const resStats = await fetch(`${API_BASE}/api/appointments/stats/summary`);
+        const resStats = await fetch(`${API_BASE}/appointments/stats/summary`);
         const dataStats = await resStats.json();
 
-        const resApp = await fetch(`${API_BASE}/api/appointments?limit=6`);
+        const resApp = await fetch(`${API_BASE}/appointments?limit=6`);
         const dataApp = await resApp.json();
 
-        const resDocs = await fetch(`${API_BASE}/api/doctors?limit=5`);
+        const resDocs = await fetch(`${API_BASE}/doctors?limit=5`);
         const dataDocs = await resDocs.json();
 
         if (dataStats.success && dataStats.stats) {

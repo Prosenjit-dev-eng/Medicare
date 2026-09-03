@@ -14,7 +14,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
 function ServiceAppointmentsPage() {
   const [appointments, setAppointments] = useState([]);
@@ -26,7 +26,7 @@ function ServiceAppointmentsPage() {
   const fetchServiceAppointments = async () => {
     setLoading(true);
     try {
-      let url = `${API_BASE}/api/service-appointments?limit=100`;
+      let url = `${API_BASE}/service-appointments?limit=100`;
       if (searchQuery) url += `&search=${encodeURIComponent(searchQuery)}`;
       if (statusFilter && statusFilter !== "All") url += `&status=${encodeURIComponent(statusFilter)}`;
       if (dateFilter) url += `&date=${encodeURIComponent(dateFilter)}`;
@@ -78,7 +78,7 @@ function ServiceAppointmentsPage() {
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      const res = await fetch(`${API_BASE}/api/service-appointments/${id}`, {
+      const res = await fetch(`${API_BASE}/service-appointments/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),

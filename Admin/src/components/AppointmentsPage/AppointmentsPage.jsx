@@ -16,7 +16,7 @@ import {
   Stethoscope,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
 function AppointmentsPage() {
   const [appointments, setAppointments] = useState([]);
@@ -30,7 +30,7 @@ function AppointmentsPage() {
   const fetchAppointments = async () => {
     setLoading(true);
     try {
-      let url = `${API_BASE}/api/appointments?limit=100`;
+      let url = `${API_BASE}/appointments?limit=100`;
       if (searchQuery) url += `&search=${encodeURIComponent(searchQuery)}`;
       if (statusFilter && statusFilter !== "All") url += `&status=${encodeURIComponent(statusFilter)}`;
       if (dateFilter) url += `&date=${encodeURIComponent(dateFilter)}`;
@@ -85,7 +85,7 @@ function AppointmentsPage() {
   const handleUpdateStatus = async (appId, newStatus) => {
     setActionLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/api/appointments/${appId}`, {
+      const res = await fetch(`${API_BASE}/appointments/${appId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),

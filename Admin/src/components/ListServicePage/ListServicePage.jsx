@@ -12,7 +12,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
 function ListServicePage() {
   const [services, setServices] = useState([]);
@@ -23,7 +23,7 @@ function ListServicePage() {
   const fetchServices = async () => {
     setLoading(true);
     try {
-      let url = `${API_BASE}/api/services?limit=100`;
+      let url = `${API_BASE}/services?limit=100`;
       if (searchQuery) url += `&q=${encodeURIComponent(searchQuery)}`;
       const res = await fetch(url);
       const data = await res.json();
@@ -67,7 +67,7 @@ function ListServicePage() {
   const handleDeleteService = async (id) => {
     if (!window.confirm("Are you sure you want to delete this diagnostic service?")) return;
     try {
-      const res = await fetch(`${API_BASE}/api/services/${id}`, {
+      const res = await fetch(`${API_BASE}/services/${id}`, {
         method: "DELETE",
       });
       const data = await res.json();

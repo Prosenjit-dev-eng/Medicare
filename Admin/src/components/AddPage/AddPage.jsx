@@ -17,7 +17,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
 function AddPage() {
   const navigate = useNavigate();
@@ -119,7 +119,7 @@ function AddPage() {
         formData.append("image", imageFile);
       }
 
-      const res = await fetch(`${API_BASE}/api/doctors`, {
+      const res = await fetch(`${API_BASE}/doctors`, {
         method: "POST",
         body: formData,
       });

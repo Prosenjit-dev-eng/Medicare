@@ -47,10 +47,11 @@ function LoginPage() {
     setLoading(true);
     setMessage({ type: "", text: "" });
 
-    const endpoint = isRegister ? "/api/users/register" : "/api/users/login";
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
+    const endpoint = isRegister ? "/users/register" : "/users/login";
 
     try {
-      const res = await fetch(`http://localhost:4000${endpoint}`, {
+      const res = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
