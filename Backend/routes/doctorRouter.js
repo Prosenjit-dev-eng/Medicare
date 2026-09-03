@@ -10,8 +10,8 @@ import {
   updateDoctor,
 } from "../controllers/doctorController.js";
 import doctorAuth from "../middlewares/doctorAuth.js";
-
-const upload = multer({ dest: "/temp" });
+// Option A (Best for Render): Change it to '/tmp'. Linux servers like Render explicitly allow writing to the /tmp directory.
+const upload = multer({ dest: "/tmp" });
 const doctorRouter = express.Router();
 
 doctorRouter.post("/login", doctorLogin);
