@@ -250,10 +250,15 @@ function Footer() {
             <span>© {new Date().getFullYear()} MediCare - Healthcare Solutions. All rights reserved.</span>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-6">
             <Link to="/contact" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
             <Link to="/contact" className="hover:text-slate-400 transition-colors">Terms of Service</Link>
-            <a href="http://localhost:5174" className="text-emerald-400 font-semibold hover:underline">
+            <a
+              href={import.meta.env.VITE_ADMIN_URL || "http://localhost:5174"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-400 font-semibold hover:underline"
+            >
               Doctor Admin Portal →
             </a>
           </div>

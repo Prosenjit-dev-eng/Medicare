@@ -139,7 +139,7 @@ function Navbar({ onLogout }) {
           <div className="flex items-center gap-3 shrink-0">
             {/* Link to Patient Frontend */}
             <a
-              href="http://localhost:5173"
+              href={import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173"}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-colors"

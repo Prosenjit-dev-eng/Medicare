@@ -125,7 +125,7 @@ function Hero() {
               </div>
 
               {/* Floating Satisfaction badge */}
-              <div className="absolute -bottom-5 -left-5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-emerald-100 dark:border-slate-800 flex items-center gap-3 sm:flex">
+              <div className="absolute bottom-2 left-2 sm:-bottom-5 sm:-left-5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-3 sm:p-4 rounded-2xl shadow-xl border border-emerald-100 dark:border-slate-800 flex items-center gap-2.5 sm:gap-3">
                 <div className="w-12 h-12 rounded-xl bg-emerald-500 flex items-center justify-center text-white font-bold text-lg">
                   98%
                 </div>

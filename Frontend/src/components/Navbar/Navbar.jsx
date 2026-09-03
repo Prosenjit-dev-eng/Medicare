@@ -125,7 +125,7 @@ function Navbar() {
           <div className="hidden sm:flex items-center gap-3">
             {/* Doctor Admin Link */}
             <a
-              href="http://localhost:5174"
+              href={import.meta.env.VITE_ADMIN_URL || "http://localhost:5174"}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-50 dark:bg-slate-800 hover:bg-emerald-100 dark:hover:bg-slate-700 text-emerald-800 dark:text-emerald-300 text-xs sm:text-sm font-bold border border-emerald-200 dark:border-slate-700 transition-colors"
@@ -201,7 +201,7 @@ function Navbar() {
 
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
               <a
-                href="http://localhost:5174"
+                href={import.meta.env.VITE_ADMIN_URL || "http://localhost:5174"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-slate-800 text-emerald-800 dark:text-emerald-300 text-sm font-bold border border-emerald-200 dark:border-slate-700"

@@ -587,17 +587,17 @@ function DoctorsPage() {
 
         {/* BOOKING MODAL */}
         {selectedDoctor && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
-            <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-3xl shadow-2xl border border-emerald-100 dark:border-slate-800 overflow-hidden my-8">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
+            <div className="relative w-full max-w-2xl max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-3xl shadow-2xl border border-emerald-100 dark:border-slate-800 overflow-hidden my-auto">
               
               {/* Modal Header */}
-              <div className="bg-linear-to-r from-emerald-600 to-teal-600 p-6 text-white flex items-center justify-between">
+              <div className="bg-linear-to-r from-emerald-600 to-teal-600 p-5 sm:p-6 text-white flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-2xl bg-white/10 backdrop-blur-xs">
-                    <Calendar className="w-6 h-6 text-white" />
+                  <div className="p-2 sm:p-2.5 rounded-2xl bg-white/10 backdrop-blur-xs">
+                    <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold">Book Appointment</h3>
+                    <h3 className="text-lg sm:text-xl font-bold">Book Appointment</h3>
                     <p className="text-xs text-emerald-100">
                       Consult with {selectedDoctor.name} ({selectedDoctor.specialization})
                     </p>
@@ -613,7 +613,7 @@ function DoctorsPage() {
               </div>
 
               {/* Modal Body */}
-              <div className="p-6 sm:p-8">
+              <div className="p-5 sm:p-8 overflow-y-auto flex-1">
                 {bookingSuccess ? (
                   <div className="text-center py-8">
                     <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto mb-4 animate-bounce" />

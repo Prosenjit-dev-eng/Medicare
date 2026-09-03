@@ -247,29 +247,29 @@ function AppointmentPage() {
         ) : (
           <>
             {/* Tab Switcher: Doctor Appointments vs Booked Services */}
-        <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
           <button
             onClick={() => setActiveTab("doctor")}
-            className={`px-5 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${
+            className={`px-4 sm:px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center sm:justify-start gap-2 cursor-pointer ${
               activeTab === "doctor"
                 ? "bg-emerald-600 text-white shadow-xs"
                 : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800"
             }`}
           >
-            <Stethoscope className="w-4 h-4" />
-            <span>Your Doctor Appointments ({doctorAppointments.length})</span>
+            <Stethoscope className="w-4 h-4 shrink-0" />
+            <span>Doctor Consultations ({doctorAppointments.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab("service")}
-            className={`px-5 py-2.5 rounded-2xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer ${
+            className={`px-4 sm:px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center sm:justify-start gap-2 cursor-pointer ${
               activeTab === "service"
                 ? "bg-teal-600 text-white shadow-xs"
                 : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800"
             }`}
           >
-            <Activity className="w-4 h-4" />
-            <span>Your Booked Services ({serviceAppointments.length})</span>
+            <Activity className="w-4 h-4 shrink-0" />
+            <span>Booked Services ({serviceAppointments.length})</span>
           </button>
         </div>
 
