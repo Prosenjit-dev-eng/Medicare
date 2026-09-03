@@ -3,7 +3,8 @@ import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary.js
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "medicare_jwt_secret_default_key";
-
+// Helper FUnctions
+// Convert time string like "10:30 AM" to total minutes since midnight
 const parseTimeToMinutes = (t = "") => {
   const [time = "0:00", ampm = ""] = (t || "").split(" ");
   const [hh = 0, mm = 0] = time.split(":").map(Number);
@@ -11,7 +12,8 @@ const parseTimeToMinutes = (t = "") => {
   if ((ampm || "").toUpperCase() === "PM") h += 12;
   return h * 60 + (mm || 0);
 };
-
+// This function takes a schedule object and ensures that each date's slots are unique and sorted in ascending order.
+// Return AM or PM time slots in ascending order for each date in the schedule.
 function dedupeAndSortSchedule(schedule = {}) {
   const out = {};
   if (!schedule || typeof schedule !== "object") return out;
@@ -23,7 +25,7 @@ function dedupeAndSortSchedule(schedule = {}) {
   });
   return out;
 }
-
+// This function takes a schedule input, which can be a stringified JSON or an object, and returns a normalized schedule object with unique and sorted time slots for each date. If the input is a string, it attempts to parse it as JSON. If parsing fails or the input is invalid, it returns an empty object. The resulting schedule is processed through the dedupeAndSortSchedule function to ensure that each date's slots are unique and sorted in ascending order.
 function parseScheduleInput(s) {
   if (!s) return {};
   if (typeof s === "string") {
@@ -100,16 +102,20 @@ export async function createDoctor(req, res) {
       about: body.about || "Dedicated healthcare specialist committed to patient well-being.",
       fee: Number(body.fee) || 500,
       schedule,
-      success: body.success || "98%",
-      patients: body.patients || "1000+",
-      rating: Number(body.rating) || 4.8,
+      success: body.success || "",
+      patients: body.patients || "",
+      rating: body.rating !== undefined ? Number(body.rating) : 0,
     });
 
     await doc.save();
-
+    const secret = process.env.JWT_SECRET;
+    if(!secret){
+      console.warn("JWT_SECRET is not defined in environment variables.");
+      return res.status(500).json({ success: false, message: "Server configuration error." });
+    }
     const token = jwt.sign(
       { id: doc._id.toString(), email: doc.email, role: "doctor" },
-      JWT_SECRET,
+      secret,
       { expiresIn: "7d" }
     );
 

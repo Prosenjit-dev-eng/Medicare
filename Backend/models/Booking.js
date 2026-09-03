@@ -143,7 +143,6 @@ const bookingSchema = new mongoose.Schema(
 
 bookingSchema.index({ date: 1, status: 1 });
 bookingSchema.index({ bookingType: 1, status: 1 });
-bookingSchema.index({ "payment.sessionId": 1 });
 
 const Booking = mongoose.models.Booking || mongoose.model("Booking", bookingSchema);
 

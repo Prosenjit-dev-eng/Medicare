@@ -144,6 +144,7 @@ export const getAppointments = async (req, res) => {
       patientClerkId,
       createdBy,
       userId,
+      email,
     } = req.query;
 
     const limit = Math.min(500, Math.max(1, parseInt(limitRaw, 10) || 100));
@@ -158,7 +159,11 @@ export const getAppointments = async (req, res) => {
 
     const creator = createdBy || patientClerkId || userId || (req.user?.id && req.user?.role !== "admin" ? req.user.id : null);
     if (creator && !doctorId) {
-      filter.$or = [{ createdBy: creator }, { mobile: creator }];
+      const orConditions = [{ createdBy: creator }, { mobile: creator }];
+      if (email) orConditions.push({ email: email.trim().toLowerCase() });
+      filter.$or = orConditions;
+    } else if (email && !doctorId) {
+      filter.email = email.trim().toLowerCase();
     }
 
     if (search) {

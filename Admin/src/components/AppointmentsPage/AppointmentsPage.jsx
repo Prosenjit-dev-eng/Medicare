@@ -106,27 +106,41 @@ function AppointmentsPage() {
     }
   };
 
+  const role = localStorage.getItem("medicare_admin_role") || "doctor";
+  let user = {};
+  try {
+    user = JSON.parse(localStorage.getItem("medicare_admin_user") || "{}");
+  } catch {}
+
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 font-sans">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 font-sans transition-colors duration-300">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-slate-800">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Doctor <span className="text-emerald-600">Appointments Management</span>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider mb-1">
+            <Stethoscope size={12} />
+            <span>{role === "doctor" ? "Doctor Consultation Queue" : "Hospital Central Scheduling"}</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            {role === "doctor" ? "My Scheduled Appointments" : "Patient Appointments Manager"}
           </h1>
-          <p className="text-slate-600 text-xs sm:text-sm mt-1">
-            Review patient consult requests, confirm schedules, update clinic attendance, and manage cancellations.
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            {role === "doctor"
+              ? `Manage your active clinical consultations, update diagnosis status, or reschedule appointments for ${user.name || "Dr. Rahul Sharma"}.`
+              : "Monitor all doctor consultations, verify Stripe online transactions, and manage clinic patient flow."}
           </p>
         </div>
 
-        <button
-          onClick={fetchAppointments}
-          className="self-start sm:self-auto px-4 py-2 rounded-xl bg-white border border-slate-200 hover:border-emerald-300 text-slate-700 text-xs font-bold shadow-2xs transition-all flex items-center gap-1.5"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-          <span>Refresh</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={fetchAppointments}
+            className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors shadow-2xs cursor-pointer"
+            title="Refresh Appointments"
+          >
+            <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
+          </button>
+        </div>
       </div>
 
       {/* Filter & Search Bar */}

@@ -17,9 +17,23 @@ function App() {
       localStorage.getItem("doctorToken_v1") || localStorage.getItem("admin_token")
     );
   });
+
+  // Initialize theme from localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("medicare_admin_theme");
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else if (savedTheme === "light") {
+      document.documentElement.classList.remove("dark");
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const role = localStorage.getItem("medicare_admin_role") || "doctor";
   const navigate = useNavigate();
 
-  const handleLoginSuccess = (token, role, user) => {
+  const handleLoginSuccess = (token, userRole, user) => {
     setIsAuthenticated(true);
     navigate("/");
   };
@@ -29,11 +43,11 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 selection:bg-emerald-500 selection:text-white transition-colors duration-300">
       {isAuthenticated && <Navbar onLogout={handleLogout} />}
 
       <Routes>
-        {/* Login route */}
+        {/* Login Route */}
         <Route
           path="/login"
           element={
@@ -45,7 +59,7 @@ function App() {
           }
         />
 
-        {/* Protected Dashboard & Management routes */}
+        {/* Doctor & Admin Shared Base Routes */}
         <Route
           path="/"
           element={
@@ -68,27 +82,42 @@ function App() {
           }
         />
 
+        {/* Super Admin-Only Routes (Protected against Doctor Role) */}
         <Route
           path="/add"
           element={
-            isAuthenticated ? <AddPage /> : <Navigate to="/login" replace />
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : role === "doctor" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <AddPage />
+            )
           }
         />
 
         <Route
           path="/list"
           element={
-            isAuthenticated ? <ListPage /> : <Navigate to="/login" replace />
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : role === "doctor" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <ListPage />
+            )
           }
         />
 
         <Route
           path="/service-dashboard"
           element={
-            isAuthenticated ? (
-              <ServiceDashboard />
-            ) : (
+            !isAuthenticated ? (
               <Navigate to="/login" replace />
+            ) : role === "doctor" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <ServiceDashboard />
             )
           }
         />
@@ -96,17 +125,25 @@ function App() {
         <Route
           path="/add-service"
           element={
-            isAuthenticated ? <AddService /> : <Navigate to="/login" replace />
+            !isAuthenticated ? (
+              <Navigate to="/login" replace />
+            ) : role === "doctor" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <AddService />
+            )
           }
         />
 
         <Route
           path="/list-service"
           element={
-            isAuthenticated ? (
-              <ListServicePage />
-            ) : (
+            !isAuthenticated ? (
               <Navigate to="/login" replace />
+            ) : role === "doctor" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <ListServicePage />
             )
           }
         />
@@ -114,14 +151,17 @@ function App() {
         <Route
           path="/service-appointments"
           element={
-            isAuthenticated ? (
-              <ServiceAppointmentsPage />
-            ) : (
+            !isAuthenticated ? (
               <Navigate to="/login" replace />
+            ) : role === "doctor" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <ServiceAppointmentsPage />
             )
           }
         />
 
+        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

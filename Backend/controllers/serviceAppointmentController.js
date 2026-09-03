@@ -186,6 +186,7 @@ export const getServiceAppointments = async (req, res) => {
       search = "",
       createdBy,
       userId,
+      email,
       limit: limitRaw = 100,
       page: pageRaw = 1,
     } = req.query;
@@ -202,7 +203,11 @@ export const getServiceAppointments = async (req, res) => {
 
     const creator = createdBy || userId || (req.user?.id && req.user?.role !== "admin" ? req.user.id : null);
     if (creator && !serviceId) {
-      filter.$or = [{ createdBy: creator }, { mobile: creator }];
+      const orConditions = [{ createdBy: creator }, { mobile: creator }];
+      if (email) orConditions.push({ email: email.trim().toLowerCase() });
+      filter.$or = orConditions;
+    } else if (email && !serviceId) {
+      filter.email = email.trim().toLowerCase();
     }
 
     if (search) {

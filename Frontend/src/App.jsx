@@ -11,7 +11,7 @@ import LoginPage from "./components/LoginPage/LoginPage.jsx";
 
 const App = () => {
   return (
-    <div className="flex flex-col min-h-screen font-sans text-slate-800 bg-white selection:bg-emerald-500 selection:text-white">
+    <div className="flex flex-col min-h-screen font-sans text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-950 selection:bg-emerald-500 selection:text-white transition-colors duration-300">
       <Navbar />
       <div className="flex-1">
         <Routes>

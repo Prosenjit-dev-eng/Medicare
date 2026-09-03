@@ -79,7 +79,7 @@ function Footer() {
     {
       name: "Facebook",
       icon: FacebookIcon,
-      href: "https://www.facebook.com/people/Hexagon-Digital-Services/61567156598660/",
+      href: "https://www.facebook.com",
       color: "hover:text-blue-500 hover:bg-slate-700",
     },
     {
@@ -97,7 +97,7 @@ function Footer() {
     {
       name: "LinkedIn",
       icon: LinkedinIcon,
-      href: "https://www.linkedin.com/company/hexagondigtial-services/",
+      href: "https://www.linkedin.com/in/prosenjit-hawlader-a9744932b/",
       color: "hover:text-blue-400 hover:bg-slate-700",
     },
     {
@@ -133,20 +133,20 @@ function Footer() {
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
                 <a href="tel:+918299431275" className="hover:text-emerald-400 transition-colors">
-                  +91 8299431275
+                  +91 6289644619
                 </a>
               </div>
 
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
                 <a href="mailto:hexagonsservices@gmail.com" className="hover:text-emerald-400 transition-colors">
-                  hexagonsservices@gmail.com
+                  techprosenjit45@gmail.com
                 </a>
               </div>
 
               <div className="flex items-center gap-2.5">
                 <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Lucknow, Uttar Pradesh, India</span>
+                <span>Barasat, Kolkata, India</span>
               </div>
             </div>
           </div>

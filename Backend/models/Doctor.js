@@ -8,7 +8,6 @@ const doctorSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      index: true,
     },
     password: {
       type: String,
@@ -81,7 +80,7 @@ const doctorSchema = new mongoose.Schema(
   }
 );
 
-doctorSchema.index({ name: "text", specialization: "text" });
+doctorSchema.index({ name: "text", specialization: "text" });//text search
 
 const Doctor = mongoose.models.Doctor || mongoose.model("Doctor", doctorSchema);
 
