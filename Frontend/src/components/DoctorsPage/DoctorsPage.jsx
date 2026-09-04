@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useUser } from "@clerk/clerk-react";
 import {
   Search,
@@ -150,10 +150,10 @@ const specialties = [
 
 function DoctorsPage() {
   const { user } = useUser();
-  const [doctors, setDoctors] = useState(fallbackDoctors);
+  const [allDoctors, setAllDoctors] = useState(fallbackDoctors);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("All");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Booking Modal State
   const [selectedDoctor, setSelectedDoctor] = useState(null);
@@ -171,44 +171,77 @@ function DoctorsPage() {
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
 
-  const fetchDoctors = (q = "", spec = "All") => {
-    setLoading(true);
-    let url = `${API_BASE_URL}/doctors?`;
-    if (q) url += `q=${encodeURIComponent(q)}&`;
-    if (spec && spec !== "All") url += `specialization=${encodeURIComponent(spec)}&`;
-
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success && data.doctors) {
-          setDoctors(data.doctors);
-        }
-      })
-      .catch((err) => {
-        console.warn("Using fallback doctor dataset:", err);
-        const filtered = fallbackDoctors.filter((doc) => {
-          const matchQuery =
-            doc.name.toLowerCase().includes(q.toLowerCase()) ||
-            doc.specialization.toLowerCase().includes(q.toLowerCase()) ||
-            doc.location.toLowerCase().includes(q.toLowerCase());
-          const matchSpec = spec === "All" || doc.specialization.toLowerCase() === spec.toLowerCase();
-          return matchQuery && matchSpec;
-        });
-        setDoctors(filtered);
-      })
-      .finally(() => setLoading(false));
-  };
-
+  // 1. Initial Fetch on Mount with proper [] dependency array
   useEffect(() => {
-    if (!searchQuery) {
-      fetchDoctors("", selectedSpecialty);
-      return;
-    }
-    const timer = setTimeout(() => {
-      fetchDoctors(searchQuery, selectedSpecialty);
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [searchQuery, selectedSpecialty]);
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const fetchInitialDoctors = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`${API_BASE_URL}/doctors`, {
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+        const data = await res.json();
+
+        if (isMounted) {
+          const fetchedList = data?.doctors || data?.data;
+          if (Array.isArray(fetchedList) && fetchedList.length > 0) {
+            setAllDoctors(fetchedList);
+          } else {
+            // Keep rich fallback data if backend has 0 registered doctors
+            setAllDoctors(fallbackDoctors);
+          }
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.warn("Doctors API fetch failed, preserving fallback list:", err);
+          if (isMounted) {
+            setAllDoctors(fallbackDoctors);
+          }
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchInitialDoctors();
+
+    // Strict Mode & Cleanup: Only abort the fetch controller and mark unmounted.
+    // NEVER call setAllDoctors([]) in cleanup!
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []); // Run ONCE on mount
+
+  // 2. Client-side Search & Category Filtering via useMemo (Guarantees no race conditions or blank overwrites)
+  const filteredDoctors = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    const specialty = selectedSpecialty.trim().toLowerCase();
+
+    return allDoctors.filter((doc) => {
+      const name = (doc.name || "").toLowerCase();
+      const spec = (doc.specialization || doc.speciality || "").toLowerCase();
+      const location = (doc.location || "").toLowerCase();
+      const qual = (doc.qualifications || "").toLowerCase();
+
+      const matchesQuery =
+        !query ||
+        name.includes(query) ||
+        spec.includes(query) ||
+        location.includes(query) ||
+        qual.includes(query);
+
+      const matchesSpecialty =
+        !specialty || specialty === "all" || spec.includes(specialty);
+
+      return matchesQuery && matchesSpecialty;
+    });
+  }, [allDoctors, searchQuery, selectedSpecialty]);
 
   // Pre-fill user details when user changes
   useEffect(() => {
@@ -479,7 +512,7 @@ function DoctorsPage() {
         </div>
 
         {/* Doctors Grid */}
-        {doctors.length === 0 ? (
+        {filteredDoctors.length === 0 ? (
           <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 p-8">
             <Filter className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
             <h3 className="text-lg font-bold text-slate-700 dark:text-slate-200">No matching doctors found</h3>
@@ -489,14 +522,14 @@ function DoctorsPage() {
                 setSearchQuery("");
                 setSelectedSpecialty("All");
               }}
-              className="mt-4 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-bold"
+              className="mt-4 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold cursor-pointer transition-colors"
             >
               Reset Filters
             </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {doctors.map((doc, idx) => {
+            {filteredDoctors.map((doc, idx) => {
               const matchedFallback = fallbackDoctors.find(
                 (f) => f.name?.toLowerCase().trim() === doc.name?.toLowerCase().trim()
               ) || fallbackDoctors[idx % fallbackDoctors.length];
@@ -563,15 +596,15 @@ function DoctorsPage() {
 
                   {/* Bottom Fee & Book Button */}
                   <div className="p-6 pt-0">
-                    <div className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700">
                       <div>
                         <span className="text-[11px] text-slate-400 uppercase font-semibold block">Fee</span>
-                        <span className="text-lg font-extrabold text-slate-900">₹{doc.fee || 500}</span>
+                        <span className="text-lg font-extrabold text-slate-900 dark:text-white">₹{doc.fee || 500}</span>
                       </div>
 
                       <button
                         onClick={() => handleOpenBooking(doc)}
-                        className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-xs hover:shadow-md transition-all inline-flex items-center gap-1.5"
+                        className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-xs hover:shadow-md transition-all inline-flex items-center gap-1.5 cursor-pointer"
                       >
                         <Calendar className="w-4 h-4" />
                         <span>Book Now</span>

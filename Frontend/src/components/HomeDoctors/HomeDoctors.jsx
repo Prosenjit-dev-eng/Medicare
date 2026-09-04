@@ -58,7 +58,56 @@ const featuredDoctors = [
 ];
 
 function HomeDoctors() {
-  const [doctors] = useState(featuredDoctors);
+  const [doctors, setDoctors] = useState(featuredDoctors);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
+
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const fetchFeaturedDoctors = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`${API_BASE_URL}/doctors?limit=4`, {
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+        const data = await res.json();
+
+        if (isMounted) {
+          const list = data?.doctors || data?.data;
+          if (Array.isArray(list) && list.length > 0) {
+            setDoctors(list.slice(0, 4));
+          } else {
+            // Keep rich featured doctors if backend has 0 registered doctors
+            setDoctors(featuredDoctors);
+          }
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.warn("Featured doctors fetch failed, retaining fallback:", err);
+          if (isMounted) {
+            setDoctors(featuredDoctors);
+          }
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchFeaturedDoctors();
+
+    // Strict Mode & Cleanup: Only cancel in-flight request and mark unmounted.
+    // NEVER call setDoctors([]) in cleanup!
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []); // Run ONCE on mount
 
   return (
     <section className="py-16 bg-white dark:bg-slate-950 transition-colors duration-300">
