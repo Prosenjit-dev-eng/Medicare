@@ -149,10 +149,10 @@ function AddPage() {
       
       {/* Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-          Onboard <span className="text-emerald-600">New Doctor</span>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          Onboard <span className="text-emerald-600 dark:text-emerald-400">New Doctor</span>
         </h1>
-        <p className="text-slate-600 text-xs sm:text-sm mt-1">
+        <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-1">
           Add medical credentials, consult fees, clinic location, and configure available booking slots.
         </p>
       </div>
@@ -161,31 +161,31 @@ function AddPage() {
         <div
           className={`p-4 rounded-2xl text-xs sm:text-sm font-semibold flex items-center gap-2 ${
             message.type === "success"
-              ? "bg-emerald-100 text-emerald-900 border border-emerald-300"
-              : "bg-red-100 text-red-900 border border-red-300"
+              ? "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-900 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-800"
+              : "bg-red-100 dark:bg-red-950/80 text-red-900 dark:text-red-200 border border-red-300 dark:border-red-800"
           }`}
         >
           {message.type === "success" ? (
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
           ) : (
-            <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0" />
           )}
           <span>{message.text}</span>
         </div>
       )}
 
       {/* Form Container */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-emerald-100 space-y-8">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-sm border border-emerald-100 dark:border-slate-800 space-y-8">
         
         {/* SECTION 1: Personal & Login Details */}
         <div>
-          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 pb-2 border-b border-slate-100">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">
             1. Doctor Profile & Authentication
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Doctor Full Name *
               </label>
               <input
@@ -195,12 +195,12 @@ function AddPage() {
                 placeholder="Dr. Rahul Sharma"
                 value={form.name}
                 onChange={handleInputChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Email Address (Login ID) *
               </label>
               <input
@@ -210,12 +210,12 @@ function AddPage() {
                 placeholder="dr.rahul@medicare.com"
                 value={form.email}
                 onChange={handleInputChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Portal Password *
               </label>
               <input
@@ -225,19 +225,19 @@ function AddPage() {
                 placeholder="••••••••"
                 value={form.password}
                 onChange={handleInputChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Specialization
               </label>
               <select
                 name="specialization"
                 value={form.specialization}
                 onChange={handleInputChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white text-sm"
               >
                 {specializations.map((s) => (
                   <option key={s} value={s}>{s}</option>
@@ -246,7 +246,7 @@ function AddPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Consultation Fee (₹)
               </label>
               <input
@@ -255,12 +255,12 @@ function AddPage() {
                 placeholder="500"
                 value={form.fee}
                 onChange={handleInputChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Experience
               </label>
               <input
@@ -269,12 +269,12 @@ function AddPage() {
                 placeholder="10+ Years"
                 value={form.experience}
                 onChange={handleInputChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Qualifications
               </label>
               <input
@@ -283,12 +283,12 @@ function AddPage() {
                 placeholder="MBBS, MD (Cardiology)"
                 value={form.qualifications}
                 onChange={handleInputChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Clinic Location
               </label>
               <input
@@ -297,19 +297,19 @@ function AddPage() {
                 placeholder="Gomtinagar, Lucknow"
                 value={form.location}
                 onChange={handleInputChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Availability Status
               </label>
               <select
                 name="availability"
                 value={form.availability}
                 onChange={handleInputChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white text-sm"
               >
                 <option value="Available">Available</option>
                 <option value="Unavailable">Unavailable</option>
@@ -318,7 +318,7 @@ function AddPage() {
           </div>
 
           <div className="mt-4">
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               About Doctor & Clinical Biography
             </label>
             <textarea
@@ -327,23 +327,23 @@ function AddPage() {
               placeholder="Detailed background regarding surgical procedures, fellowships, and expertise..."
               value={form.about}
               onChange={handleInputChange}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
             ></textarea>
           </div>
         </div>
 
         {/* SECTION 2: Doctor Photo Upload */}
         <div>
-          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 pb-2 border-b border-slate-100">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">
             2. Profile Photograph
           </h3>
 
           <div className="flex items-center gap-4">
-            <div className="w-20 h-20 rounded-2xl bg-emerald-50 border-2 border-dashed border-emerald-200 flex items-center justify-center overflow-hidden shrink-0">
+            <div className="w-20 h-20 rounded-2xl bg-emerald-50 dark:bg-slate-800 border-2 border-dashed border-emerald-200 dark:border-slate-700 flex items-center justify-center overflow-hidden shrink-0">
               {imagePreview ? (
                 <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
               ) : (
-                <Stethoscope className="w-8 h-8 text-emerald-400" />
+                <Stethoscope className="w-8 h-8 text-emerald-400 dark:text-emerald-500" />
               )}
             </div>
 
@@ -358,39 +358,39 @@ function AddPage() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors inline-flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors inline-flex items-center gap-1.5 cursor-pointer"
               >
                 <Upload className="w-3.5 h-3.5" />
                 <span>Upload Doctor Image</span>
               </button>
-              <p className="text-[11px] text-slate-400 mt-1">PNG, JPG, or WEBP up to 5MB</p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">PNG, JPG, or WEBP up to 5MB</p>
             </div>
           </div>
         </div>
 
         {/* SECTION 3: Schedule & Time Slots */}
         <div>
-          <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 pb-2 border-b border-slate-100">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4 pb-2 border-b border-slate-100 dark:border-slate-800">
             3. Available Time Slots Schedule
           </h3>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 mb-4 flex flex-wrap items-center gap-3">
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 mb-4 flex flex-wrap items-center gap-3">
             <div>
-              <label className="block text-[11px] font-semibold text-slate-600 mb-1">Select Date</label>
+              <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">Select Date</label>
               <input
                 type="date"
                 value={newDate}
                 onChange={(e) => setNewDate(e.target.value)}
-                className="px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-slate-600 mb-1">Select Slot Time</label>
+              <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">Select Slot Time</label>
               <select
                 value={newSlotTime}
                 onChange={(e) => setNewSlotTime(e.target.value)}
-                className="px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 {["09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "02:00 PM", "02:30 PM", "03:00 PM", "04:00 PM", "05:00 PM"].map(
                   (t) => (
@@ -403,7 +403,7 @@ function AddPage() {
             <button
               type="button"
               onClick={handleAddSlot}
-              className="self-end px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors inline-flex items-center gap-1"
+              className="self-end px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors inline-flex items-center gap-1 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Slot</span>
@@ -413,23 +413,23 @@ function AddPage() {
           {/* Configured Slots List */}
           <div className="space-y-3">
             {Object.keys(schedule).length === 0 ? (
-              <p className="text-xs text-slate-400 italic">No custom slots added yet.</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 italic">No custom slots added yet.</p>
             ) : (
               Object.entries(schedule).map(([d, slots]) => (
-                <div key={d} className="p-3.5 rounded-2xl bg-white border border-slate-200">
-                  <span className="text-xs font-bold text-slate-800 block mb-2">{d}</span>
+                <div key={d} className="p-3.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                  <span className="text-xs font-bold text-slate-800 dark:text-white block mb-2">{d}</span>
                   <div className="flex flex-wrap gap-2">
                     {slots.map((s) => (
                       <span
                         key={s}
-                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200"
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-xs font-semibold border border-emerald-200 dark:border-emerald-800"
                       >
-                        <Clock className="w-3 h-3 text-emerald-600" />
+                        <Clock className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                         <span>{s}</span>
                         <button
                           type="button"
                           onClick={() => handleRemoveSlot(d, s)}
-                          className="hover:text-red-500 transition-colors"
+                          className="hover:text-red-500 dark:hover:text-red-400 transition-colors cursor-pointer"
                         >
                           <Trash2 className="w-3 h-3" />
                         </button>
@@ -443,11 +443,11 @@ function AddPage() {
         </div>
 
         {/* Submit Button */}
-        <div className="pt-4 border-t border-slate-100 flex justify-end">
+        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
           <button
             type="submit"
             disabled={loading}
-            className="px-8 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all disabled:opacity-50 inline-flex items-center gap-2"
+            className="px-8 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all disabled:opacity-50 inline-flex items-center gap-2 cursor-pointer"
           >
             <UserPlus className="w-4 h-4" />
             <span>{loading ? "Onboarding Doctor..." : "Save & Onboard Doctor"}</span>

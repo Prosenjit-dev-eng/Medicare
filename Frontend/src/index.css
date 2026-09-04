@@ -12,3 +12,46 @@ html.dark {
   background-color: #020617; /* slate-950 */
   color: #f8fafc;
 }
+
+/* Ensure form controls have legible text and placeholder colors in light and dark modes */
+input, textarea, select {
+  color: #0f172a;
+}
+
+html.dark input,
+html.dark textarea,
+html.dark select {
+  color: #f8fafc;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b;
+}
+
+html.dark option {
+  background-color: #0f172a;
+  color: #f8fafc;
+}
+
+html.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+/* Chrome/Safari Autofill contrast support */
+html.dark input:-webkit-autofill,
+html.dark input:-webkit-autofill:hover, 
+html.dark input:-webkit-autofill:focus, 
+html.dark textarea:-webkit-autofill,
+html.dark select:-webkit-autofill {
+  -webkit-text-fill-color: #f8fafc !important;
+  -webkit-box-shadow: 0 0 0px 1000px #1e293b inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}

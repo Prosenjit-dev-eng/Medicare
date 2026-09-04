@@ -144,18 +144,18 @@ function AppointmentsPage() {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-emerald-100 space-y-4">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 shadow-sm border border-emerald-100 dark:border-slate-800 space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
           
           {/* Search */}
           <div className="lg:col-span-6 relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-500" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-500 dark:text-emerald-400" />
             <input
               type="text"
               placeholder="Search by patient name, phone, doctor name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-xs sm:text-sm"
             />
           </div>
 
@@ -164,7 +164,7 @@ function AppointmentsPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white text-xs sm:text-sm"
             >
               <option value="All">All Statuses</option>
               <option value="Pending">Pending</option>
@@ -180,7 +180,7 @@ function AppointmentsPage() {
               type="date"
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs sm:text-sm"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white text-xs sm:text-sm"
             />
           </div>
 
@@ -188,10 +188,10 @@ function AppointmentsPage() {
       </div>
 
       {/* Appointments List Table */}
-      <div className="bg-white rounded-3xl shadow-sm border border-emerald-100 overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-emerald-100 dark:border-slate-800 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50/80 text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-100">
+            <thead className="bg-slate-50/80 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-100 dark:border-slate-800">
               <tr>
                 <th className="py-3.5 px-4">Patient Information</th>
                 <th className="py-3.5 px-4">Doctor & Speciality</th>
@@ -201,48 +201,48 @@ function AppointmentsPage() {
                 <th className="py-3.5 px-4 text-right">Quick Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {appointments.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="py-12 text-center text-slate-400">
+                  <td colSpan="6" className="py-12 text-center text-slate-400 dark:text-slate-500">
                     No appointments matching your filters.
                   </td>
                 </tr>
               ) : (
                 appointments.map((app) => (
-                  <tr key={app._id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="py-4 px-4 font-bold text-slate-900">
+                  <tr key={app._id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
+                    <td className="py-4 px-4 font-bold text-slate-900 dark:text-white">
                       {app.patientName}
-                      <span className="block text-[11px] text-slate-400 font-normal mt-0.5">
+                      <span className="block text-[11px] text-slate-400 dark:text-slate-500 font-normal mt-0.5">
                         📞 {app.mobile} {app.email ? `• ${app.email}` : ""}
                       </span>
                     </td>
 
                     <td className="py-4 px-4">
-                      <div className="font-bold text-slate-800">{app.doctorName || "Doctor"}</div>
-                      <span className="text-[11px] font-semibold text-emerald-600">
+                      <div className="font-bold text-slate-800 dark:text-slate-200">{app.doctorName || "Doctor"}</div>
+                      <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
                         {app.speciality || "Specialist"}
                       </span>
                     </td>
 
-                    <td className="py-4 px-4 text-slate-700">
+                    <td className="py-4 px-4 text-slate-700 dark:text-slate-300">
                       <div className="font-bold flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-emerald-600" />
+                        <Calendar className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         <span>{app.date}</span>
                       </div>
-                      <div className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
-                        <Clock className="w-3.5 h-3.5 text-slate-400" />
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-0.5">
+                        <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                         <span>{app.time}</span>
                       </div>
                     </td>
 
                     <td className="py-4 px-4">
-                      <div className="font-extrabold text-slate-900 text-sm">₹{app.fees || 500}</div>
+                      <div className="font-extrabold text-slate-900 dark:text-white text-sm">₹{app.fees || 500}</div>
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
                           app.payment?.status === "Paid"
-                            ? "bg-emerald-100 text-emerald-800"
-                            : "bg-amber-100 text-amber-800"
+                            ? "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300"
+                            : "bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300"
                         }`}
                       >
                         {app.payment?.method || "Online"} • {app.payment?.status || "Pending"}
@@ -253,12 +253,12 @@ function AppointmentsPage() {
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-bold ${
                           app.status === "Confirmed"
-                            ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                            ? "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800"
                             : app.status === "Completed"
-                            ? "bg-blue-100 text-blue-800 border border-blue-300"
+                            ? "bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300 border border-blue-300 dark:border-blue-800"
                             : app.status === "Canceled"
-                            ? "bg-rose-100 text-rose-800 border border-rose-300"
-                            : "bg-amber-100 text-amber-800 border border-amber-300"
+                            ? "bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-800"
+                            : "bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800"
                         }`}
                       >
                         {app.status}
@@ -271,7 +271,7 @@ function AppointmentsPage() {
                           <button
                             onClick={() => handleUpdateStatus(app._id, "Confirmed")}
                             title="Confirm Appointment"
-                            className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-bold transition-colors"
+                            className="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold transition-colors cursor-pointer"
                           >
                             Confirm
                           </button>
@@ -281,7 +281,7 @@ function AppointmentsPage() {
                           <button
                             onClick={() => handleUpdateStatus(app._id, "Completed")}
                             title="Mark as Completed"
-                            className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-bold transition-colors"
+                            className="px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-700 dark:text-blue-300 text-[11px] font-bold transition-colors cursor-pointer"
                           >
                             Complete
                           </button>
@@ -291,7 +291,7 @@ function AppointmentsPage() {
                           <button
                             onClick={() => handleUpdateStatus(app._id, "Canceled")}
                             title="Cancel Appointment"
-                            className="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold transition-colors"
+                            className="px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900 text-rose-700 dark:text-rose-300 text-[11px] font-bold transition-colors cursor-pointer"
                           >
                             Cancel
                           </button>

@@ -444,7 +444,7 @@ function DoctorsPage() {
                 placeholder="Search doctors by name or specialization..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white dark:focus:bg-slate-800 text-slate-800 dark:text-white text-sm sm:text-base transition-all"
+                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white dark:focus:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm sm:text-base transition-all"
               />
               {searchQuery && (
                 <button
@@ -650,7 +650,7 @@ function DoctorsPage() {
                             placeholder="John Doe"
                             value={patientName}
                             onChange={(e) => setPatientName(e.target.value)}
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 dark:text-white text-sm"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
                           />
                         </div>
 
@@ -664,7 +664,7 @@ function DoctorsPage() {
                             placeholder="9876543210"
                             value={patientMobile}
                             onChange={(e) => setPatientMobile(e.target.value)}
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 dark:text-white text-sm"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
                           />
                         </div>
 
@@ -677,7 +677,7 @@ function DoctorsPage() {
                             placeholder="patient@example.com"
                             value={patientEmail}
                             onChange={(e) => setPatientEmail(e.target.value)}
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 dark:text-white text-sm"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
                           />
                         </div>
 
@@ -693,7 +693,7 @@ function DoctorsPage() {
                               placeholder="32"
                               value={patientAge}
                               onChange={(e) => setPatientAge(e.target.value)}
-                              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 dark:text-white text-sm"
+                              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
                             />
                           </div>
 
@@ -704,11 +704,11 @@ function DoctorsPage() {
                             <select
                               value={patientGender}
                               onChange={(e) => setPatientGender(e.target.value)}
-                              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 dark:text-white text-sm"
+                              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white text-sm"
                             >
-                              <option value="Male">Male</option>
-                              <option value="Female">Female</option>
-                              <option value="Other">Other</option>
+                              <option value="Male" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">Male</option>
+                              <option value="Female" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">Female</option>
+                              <option value="Other" className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white">Other</option>
                             </select>
                           </div>
                         </div>
@@ -735,7 +735,7 @@ function DoctorsPage() {
                               const slots = (selectedDoctor.schedule && selectedDoctor.schedule[e.target.value]) || [];
                               if (slots.length > 0) setSelectedSlot(slots[0]);
                             }}
-                            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-800 dark:text-white text-sm"
+                            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white text-sm"
                           />
                         </div>
 

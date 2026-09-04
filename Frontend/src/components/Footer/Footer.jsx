@@ -202,7 +202,7 @@ function Footer() {
                   placeholder="Enter your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm text-white placeholder-slate-500"
+                  className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
               </div>
 
