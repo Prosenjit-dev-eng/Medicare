@@ -298,6 +298,7 @@ function Service() {
           paymentMethod,
           fees: selectedService.price,
           createdBy: user?.id || "guest_patient",
+          frontendUrl: window.location.origin,
         }),
       });
 

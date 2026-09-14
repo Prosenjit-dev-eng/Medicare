@@ -4,13 +4,26 @@ import Stripe from "stripe";
 
 const stripeKey = process.env.STRIPE_SECRET_KEY || null;
 const stripeInstance = stripeKey ? new Stripe(stripeKey) : null;
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const FRONTEND_URL = process.env.FRONTEND_URL || "https://medicare-frontend-sooty.vercel.app";
 
 const buildFrontendBase = (req) => {
+  // 1. Explicit frontendUrl sent in request body from frontend client
+  if (req?.body?.frontendUrl && typeof req.body.frontendUrl === "string") {
+    return req.body.frontendUrl.replace(/\/$/, "");
+  }
+  // 2. Incoming Origin or Referer header
+  const origin = req?.get ? (req.get("origin") || req.get("referer")) : null;
+  if (origin) {
+    try {
+      const parsed = new URL(origin);
+      if (parsed.origin && parsed.origin !== "null") {
+        return parsed.origin;
+      }
+    } catch (_) {}
+  }
+  // 3. Configured environment variable
   if (FRONTEND_URL) return FRONTEND_URL.replace(/\/$/, "");
-  const origin = req.get("origin") || req.get("referer");
-  if (origin) return origin.replace(/\/$/, "");
-  return "http://localhost:5173";
+  return "https://medicare-frontend-sooty.vercel.app";
 };
 
 // Create Service Appointment
@@ -174,7 +187,7 @@ export const confirmServicePayment = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
+ 
 // Get Service Appointments
 export const getServiceAppointments = async (req, res) => {
   try {

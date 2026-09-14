@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/admin/:match*",
+      "destination": "https://vercel.app*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

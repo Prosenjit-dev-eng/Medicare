@@ -344,6 +344,7 @@ function DoctorsPage() {
           paymentMethod,
           fees: selectedDoctor.fee,
           createdBy: user?.id || "guest_patient",
+          frontendUrl: window.location.origin,
         }),
       });
       const data = await res.json();
