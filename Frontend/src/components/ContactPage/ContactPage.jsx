@@ -67,12 +67,12 @@ function ContactPage() {
       formData.service
     )}%0A*Query Message:* ${encodeURIComponent(formData.message || "I would like more information.")}`;
 
-    const whatsappUrl = `https://wa.me/918299431275?text=${textMessage}`;
+    const whatsappUrl = `https://wa.me/916289644619?text=${textMessage}`;
     window.open(whatsappUrl, "_blank");
 
     setNotification({
       type: "whatsapp",
-      text: "Opening WhatsApp chat with MediCare helpdesk (+91 8299431275)...",
+      text: "Opening WhatsApp chat with MediCare helpdesk (+91 6289644619)...",
     });
     setTimeout(() => setNotification({ type: "", text: "" }), 4000);
   };
@@ -93,7 +93,7 @@ function ContactPage() {
       `Hello MediCare Healthcare Team,\n\nI have a medical query regarding your clinical services.\n\nQuery Details:\n- Name: ${formData.fullName}\n- Phone: ${formData.phone || "Not provided"}\n- Email: ${formData.email || "Not provided"}\n- Department: ${formData.department}\n- Service Required: ${formData.service}\n\nQuery Message:\n${formData.message || "Please provide consultation slots and fee details."}\n\nThank you,\n${formData.fullName}`
     );
 
-    const mailtoUrl = `mailto:techprosenjit45@gmail.com?cc=hexagonsservices@gmail.com&subject=${emailSubject}&body=${emailBody}`;
+    const mailtoUrl = `mailto:techprosenjit45@gmail.com?cc=techprosenjit45@gmail.com&subject=${emailSubject}&body=${emailBody}`;
     window.location.href = mailtoUrl;
 
     setNotification({

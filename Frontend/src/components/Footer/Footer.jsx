@@ -132,14 +132,14 @@ function Footer() {
             <div className="space-y-2 text-xs text-slate-300 pt-2">
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                <a href="tel:+918299431275" className="hover:text-emerald-400 transition-colors">
+                <a href="tel:+916289644619" className="hover:text-emerald-400 transition-colors">
                   +91 6289644619
                 </a>
               </div>
 
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
-                <a href="mailto:hexagonsservices@gmail.com" className="hover:text-emerald-400 transition-colors">
+                <a href="techprosenjit45@gmail.com" className="hover:text-emerald-400 transition-colors">
                   techprosenjit45@gmail.com
                 </a>
               </div>
