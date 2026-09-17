@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useUser, useClerk } from "@clerk/clerk-react";
 import {
   Search,
   Calendar,
@@ -14,7 +13,10 @@ import {
   Filter,
   Sparkles,
   ShieldAlert,
+  Lock,
+  Key,
 } from "lucide-react";
+import { useAuth } from "../../context/AuthContext.jsx";
 import D1 from "../../assets/D1.png";
 import D2 from "../../assets/D2.png";
 import D3 from "../../assets/D3.png";
@@ -150,8 +152,8 @@ const specialties = [
 ];
 
 function DoctorsPage() {
-  const { user } = useUser();
-  const clerk = useClerk();
+  const { isSignedIn, user, openLogin } = useAuth();
+  const [authNotice, setAuthNotice] = useState("");
   const [allDoctors, setAllDoctors] = useState(fallbackDoctors);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("All");
@@ -247,7 +249,7 @@ function DoctorsPage() {
 
   // Pre-fill user details when user changes
   useEffect(() => {
-    if (user) {
+    if (isSignedIn && user) {
       let savedProfile = {};
       try {
         if (user.id) {
@@ -255,28 +257,21 @@ function DoctorsPage() {
         }
       } catch (e) {}
 
-      const clerkFullName =
-        user.fullName ||
-        [user.firstName, user.lastName].filter(Boolean).join(" ") ||
-        user.username ||
-        "";
-      const clerkEmail =
-        user.primaryEmailAddress?.emailAddress || user.emailAddresses?.[0]?.emailAddress || "";
-      const clerkPhone =
-        user.primaryPhoneNumber?.phoneNumber ||
-        user.phoneNumbers?.[0]?.phoneNumber ||
-        user.unsafeMetadata?.phone ||
-        "";
-
-      setPatientName(clerkFullName || savedProfile.patientName || "");
-      setPatientEmail(clerkEmail || savedProfile.patientEmail || "");
-      setPatientMobile(clerkPhone || savedProfile.patientMobile || "");
+      setPatientName(user.name || savedProfile.patientName || "");
+      setPatientEmail(user.email || savedProfile.patientEmail || "");
+      setPatientMobile(user.phone ? String(user.phone).replace(/\D/g, "").slice(0, 10) : savedProfile.patientMobile || "");
       if (savedProfile.patientAge) setPatientAge(savedProfile.patientAge);
       if (savedProfile.patientGender) setPatientGender(savedProfile.patientGender);
     }
-  }, [user]);
+  }, [isSignedIn, user]);
 
   const handleOpenBooking = (doctor) => {
+    if (!isSignedIn) {
+      setAuthNotice("Please log in to your MediCare account first to book an appointment and proceed with payment.");
+      openLogin();
+      return;
+    }
+    setAuthNotice("");
     setSelectedDoctor(doctor);
     setBookingSuccess(false);
     setBookingError("");
@@ -288,22 +283,9 @@ function DoctorsPage() {
       }
     } catch (e) {}
 
-    const clerkFullName =
-      user?.fullName ||
-      [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
-      user?.username ||
-      "";
-    const clerkEmail =
-      user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress || "";
-    const clerkPhone =
-      user?.primaryPhoneNumber?.phoneNumber ||
-      user?.phoneNumbers?.[0]?.phoneNumber ||
-      user?.unsafeMetadata?.phone ||
-      "";
-
-    setPatientName(clerkFullName || savedProfile.patientName || "");
-    setPatientEmail(clerkEmail || savedProfile.patientEmail || "");
-    setPatientMobile(clerkPhone || savedProfile.patientMobile || "");
+    setPatientName(user?.name || savedProfile.patientName || "");
+    setPatientEmail(user?.email || savedProfile.patientEmail || "");
+    setPatientMobile(user?.phone ? String(user.phone).replace(/\D/g, "").slice(0, 10) : savedProfile.patientMobile || "");
     if (savedProfile.patientAge) setPatientAge(savedProfile.patientAge);
     if (savedProfile.patientGender) setPatientGender(savedProfile.patientGender);
 
@@ -324,13 +306,9 @@ function DoctorsPage() {
     e.preventDefault();
 
     // 1. User must be logged in for payment
-    if (!user) {
+    if (!isSignedIn || !user?.id) {
       setBookingError("You must be logged in to proceed with payment and book an appointment.");
-      try {
-        clerk.openSignIn();
-      } catch (err) {
-        window.location.href = "/login";
-      }
+      openLogin();
       return;
     }
 
@@ -449,6 +427,10 @@ function DoctorsPage() {
       }
     } catch (err) {
       console.warn("Backend offline, saving appointment locally:", err);
+      if (!user?.id) {
+        setBookingError("Authentication required. Please sign in to proceed.");
+        return;
+      }
       try {
         const fallbackApp = {
           _id: `app_${Date.now()}`,
@@ -456,9 +438,9 @@ function DoctorsPage() {
           doctorName: selectedDoctor.name,
           speciality: selectedDoctor.specialization || "Specialist",
           patientName,
-          email: patientEmail || user?.primaryEmailAddress?.emailAddress || "",
+          email: patientEmail || user?.email || "",
           mobile: patientMobile,
-          createdBy: user?.id || "guest_patient",
+          createdBy: user.id,
           date: selectedDate,
           time: selectedSlot,
           fees: selectedDoctor.fee || 500,
@@ -642,10 +624,14 @@ function DoctorsPage() {
 
                       <button
                         onClick={() => handleOpenBooking(doc)}
-                        className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-xs hover:shadow-md transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                        className={`px-5 py-2.5 rounded-xl ${
+                          isSignedIn
+                            ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                            : "bg-emerald-700/90 hover:bg-emerald-700 text-white"
+                        } font-bold text-sm shadow-xs hover:shadow-md transition-all inline-flex items-center gap-1.5 cursor-pointer`}
                       >
-                        <Calendar className="w-4 h-4" />
-                        <span>Book Now</span>
+                        {isSignedIn ? <Calendar className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                        <span>{isSignedIn ? "Book Now" : "Login to Book"}</span>
                       </button>
                     </div>
                   </div>
@@ -697,6 +683,24 @@ function DoctorsPage() {
                       Check "Appointments" page to view booking status.
                     </div>
                   </div>
+                ) : !isSignedIn ? (
+                  <div className="text-center py-10 px-4 space-y-4">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto shadow-xs">
+                      <Lock className="w-7 h-7" />
+                    </div>
+                    <h4 className="text-xl font-bold text-slate-800 dark:text-white">Authentication Required</h4>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                      You must be logged in to choose consultation slots, complete payment, and book an appointment with {selectedDoctor.name}.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => openLogin()}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all cursor-pointer"
+                    >
+                      <Key className="w-4 h-4" />
+                      <span>Log In / Sign Up to Book</span>
+                    </button>
+                  </div>
                 ) : (
                   <form onSubmit={handleBookingSubmit} className="space-y-6">
                     {bookingError && (
@@ -710,24 +714,6 @@ function DoctorsPage() {
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
                         1. Patient Information
                       </h4>
-                      
-                      {!user && (
-                        <div className="mb-4 p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 flex items-center justify-between gap-3 text-xs">
-                          <div className="flex items-center gap-2">
-                            <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                            <span>You must be logged in to make a payment and confirm booking.</span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              try { clerk.openSignIn(); } catch(e) { window.location.href = "/login"; }
-                            }}
-                            className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shrink-0 cursor-pointer shadow-xs transition-colors"
-                          >
-                            Log In
-                          </button>
-                        </div>
-                      )}
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
@@ -933,6 +919,20 @@ function DoctorsPage() {
               </div>
 
             </div>
+          </div>
+        )}
+
+        {/* Floating Auth Notification Toast */}
+        {authNotice && (
+          <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-amber-600 text-white shadow-2xl flex items-center gap-3 max-w-md animate-bounce">
+            <Lock className="w-5 h-5 shrink-0 text-amber-100" />
+            <span className="text-xs sm:text-sm font-semibold">{authNotice}</span>
+            <button
+              onClick={() => setAuthNotice("")}
+              className="ml-auto text-xs uppercase font-bold text-amber-100 hover:text-white underline cursor-pointer shrink-0"
+            >
+              Dismiss
+            </button>
           </div>
         )}
 

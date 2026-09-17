@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useUser, useClerk } from "@clerk/clerk-react";
 import {
   Activity,
   Calendar,
@@ -13,7 +12,10 @@ import {
   ShieldCheck,
   ShieldAlert,
   FileText,
+  Lock,
+  Key,
 } from "lucide-react";
+import { useAuth } from "../../context/AuthContext.jsx";
 import S1 from "../../assets/S1.png";
 import S2 from "../../assets/S2.png";
 import S3 from "../../assets/S3.png";
@@ -40,97 +42,97 @@ const fallbackServices = [
   },
   {
     _id: "srv_2",
-    name: "Blood Pressure Check & ECG",
-    shortDescription: "Precision digital BP monitoring, 12-lead ECG, and cardiac assessment.",
-    about: "Comprehensive cardiovascular screening with immediate physician interpretation of your resting electrocardiogram.",
+    name: "Blood Pressure Check & ECG Scan",
+    shortDescription: "Digital automated blood pressure profiling and 12-lead ECG analysis.",
+    about: "Essential cardiovascular baseline assessment combining high-accuracy digital sphygmomanometer readings with computerized 12-lead Electrocardiogram recording.",
     price: 349,
     available: true,
     imageUrl: S2,
-    instructions: ["Avoid caffeine 1 hour before test", "Wear loose clothing"],
+    instructions: ["Avoid caffeine 2 hours prior", "Wear loose comfortable clothing"],
     slots: {
-      "2026-09-01": ["09:00 AM", "10:00 AM", "11:00 AM"],
-      "2026-09-02": ["09:00 AM", "12:00 PM"],
+      "2026-09-01": ["09:00 AM", "11:30 AM", "02:00 PM"],
+      "2026-09-03": ["10:00 AM", "01:00 PM"],
     },
   },
   {
     _id: "srv_3",
     name: "Blood Sugar Test & HbA1c",
-    shortDescription: "Fasting blood glucose, postprandial levels, and 3-month average HbA1c screening.",
-    about: "Essential screening for pre-diabetes, diabetes management, and insulin sensitivity.",
-    price: 299,
+    shortDescription: "Fasting blood glucose, postprandial glucose & 3-month HbA1c glycation.",
+    about: "Gold standard diabetes management panel evaluating immediate and 90-day glycemic control to assess metabolic health.",
+    price: 449,
     available: true,
     imageUrl: S3,
-    instructions: ["10-12 hours overnight fasting required", "Water intake is permitted"],
+    instructions: ["Fasting 8-10 hours overnight", "Morning water intake permitted"],
     slots: {
       "2026-09-01": ["08:00 AM", "08:30 AM", "09:00 AM"],
-      "2026-09-02": ["08:00 AM", "09:00 AM"],
+      "2026-09-02": ["08:00 AM", "08:30 AM"],
     },
   },
   {
     _id: "srv_4",
     name: "Full Body Health Checkup",
-    shortDescription: "72+ vital parameters including Complete Hemogram, Kidney, Liver, and Lipid profile.",
-    about: "Our most comprehensive wellness package ensuring early detection of underlying deficiencies and clinical anomalies.",
-    price: 999,
+    shortDescription: "Comprehensive 64+ parameter master profile including Liver, Kidney, Lipid & CBC.",
+    about: "Our flagship preventive health assessment covering Complete Hemogram, Renal profile, Liver function, Lipid profile, and urine routine.",
+    price: 1499,
     available: true,
     imageUrl: S4,
-    instructions: ["10-12 hours fasting mandatory", "Collect morning urine sample in sterile container"],
+    instructions: ["10-12 hours overnight fasting", "First morning urine sample"],
     slots: {
       "2026-09-01": ["08:00 AM", "09:00 AM", "10:00 AM"],
-      "2026-09-02": ["08:00 AM", "09:30 AM"],
+      "2026-09-03": ["08:00 AM", "09:30 AM"],
     },
   },
   {
     _id: "srv_5",
     name: "Digital Chest X-Ray Scan",
-    shortDescription: "High-resolution digital radiography for lungs, ribs, and cardiac silhouette.",
-    about: "Low-radiation digital radiography performed by certified radiographers with digital film delivery.",
+    shortDescription: "High-resolution low-dose digital chest radiograph (PA View) with radiologist review.",
+    about: "High-resolution radiograph of the chest cavity, lungs, airways, heart, and chest wall bones with quick electronic delivery.",
     price: 599,
     available: true,
     imageUrl: S5,
-    instructions: ["Remove metallic jewelry", "Inform staff if pregnant"],
+    instructions: ["Remove all jewelry/metal items", "Inform radiographer if pregnant"],
     slots: {
-      "2026-09-01": ["10:00 AM", "11:30 AM", "02:00 PM"],
-      "2026-09-02": ["10:00 AM", "03:00 PM"],
+      "2026-09-01": ["10:00 AM", "12:00 PM", "04:00 PM"],
+      "2026-09-02": ["11:00 AM", "03:00 PM"],
     },
   },
   {
     _id: "srv_6",
     name: "Thyroid Profile (T3, T4, TSH)",
-    shortDescription: "Complete hormonal panel to evaluate thyroid gland activity and metabolism.",
-    about: "Precision serum analysis for hypo and hyper-thyroidism symptoms, fatigue, and weight irregularities.",
-    price: 449,
+    shortDescription: "Accurate chemiluminescence immunoassay for Total T3, Total T4, and Ultrasensitive TSH.",
+    about: "Evaluates thyroid gland activity to diagnose hyperthyroidism, hypothyroidism, and endocrine metabolic imbalances.",
+    price: 399,
     available: true,
     imageUrl: S6,
-    instructions: ["Early morning fasting blood sample recommended"],
+    instructions: ["Early morning sample preferred", "Take thyroid medication after test"],
     slots: {
-      "2026-09-01": ["08:00 AM", "09:00 AM", "10:30 AM"],
+      "2026-09-01": ["08:30 AM", "09:30 AM", "10:30 AM"],
       "2026-09-02": ["08:30 AM", "10:00 AM"],
     },
   },
   {
     _id: "srv_7",
-    name: "Liver Function Test (LFT)",
-    shortDescription: "Enzyme analysis (SGOT, SGPT, Bilirubin, Albumin) for hepatic health.",
-    about: "Essential screening for liver metabolism, medication side effects, and digestive vitality.",
-    price: 399,
+    name: "Complete Hemogram (CBC)",
+    shortDescription: "Automated 24-parameter complete blood count with ESR and platelet indices.",
+    about: "Essential screening tool for detecting anemia, infections, platelet count disorders, and systemic hematological conditions.",
+    price: 299,
     available: true,
     imageUrl: S7,
-    instructions: ["8-10 hours fasting suggested", "Avoid alcohol 24 hours prior"],
+    instructions: ["No mandatory fasting required", "Sample collection via venous blood"],
     slots: {
-      "2026-09-01": ["08:30 AM", "09:30 AM", "11:00 AM"],
-      "2026-09-02": ["09:00 AM", "10:30 AM"],
+      "2026-09-01": ["09:00 AM", "11:00 AM", "02:00 PM"],
+      "2026-09-02": ["09:00 AM", "12:00 PM"],
     },
   },
   {
     _id: "srv_8",
-    name: "Kidney Function Test (KFT)",
-    shortDescription: "Serum Creatinine, Urea, Uric Acid, and Electrolytes screening.",
-    about: "Comprehensive evaluation of renal filtration efficiency and electrolyte equilibrium.",
-    price: 399,
+    name: "Lipid Profile & Cholesterol Panel",
+    shortDescription: "Total Cholesterol, Triglycerides, HDL, LDL, VLDL, and Cardiac Risk Ratio.",
+    about: "Assesses blood fats and lipid fractions to quantify cardiovascular disease risk and guide cholesterol therapy.",
+    price: 549,
     available: true,
     imageUrl: S8,
-    instructions: ["Stay normally hydrated", "No intense workout 12 hours prior"],
+    instructions: ["Strict 12 hours overnight fasting", "Avoid heavy dinner previous night"],
     slots: {
       "2026-09-01": ["08:00 AM", "09:00 AM", "10:00 AM"],
       "2026-09-02": ["08:30 AM", "11:00 AM"],
@@ -139,8 +141,8 @@ const fallbackServices = [
 ];
 
 function Service() {
-  const { user } = useUser();
-  const clerk = useClerk();
+  const { isSignedIn, user, openLogin } = useAuth();
+  const [authNotice, setAuthNotice] = useState("");
   const [services, setServices] = useState(fallbackServices);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -199,7 +201,7 @@ function Service() {
 
   // Pre-fill user details when user changes
   useEffect(() => {
-    if (user) {
+    if (isSignedIn && user) {
       let savedProfile = {};
       try {
         if (user.id) {
@@ -207,28 +209,21 @@ function Service() {
         }
       } catch (e) {}
 
-      const clerkFullName =
-        user.fullName ||
-        [user.firstName, user.lastName].filter(Boolean).join(" ") ||
-        user.username ||
-        "";
-      const clerkEmail =
-        user.primaryEmailAddress?.emailAddress || user.emailAddresses?.[0]?.emailAddress || "";
-      const clerkPhone =
-        user.primaryPhoneNumber?.phoneNumber ||
-        user.phoneNumbers?.[0]?.phoneNumber ||
-        user.unsafeMetadata?.phone ||
-        "";
-
-      setPatientName(clerkFullName || savedProfile.patientName || "");
-      setPatientEmail(clerkEmail || savedProfile.patientEmail || "");
-      setPatientMobile(clerkPhone || savedProfile.patientMobile || "");
+      setPatientName(user.name || savedProfile.patientName || "");
+      setPatientEmail(user.email || savedProfile.patientEmail || "");
+      setPatientMobile(user.phone ? String(user.phone).replace(/\D/g, "").slice(0, 10) : savedProfile.patientMobile || "");
       if (savedProfile.patientAge) setPatientAge(savedProfile.patientAge);
       if (savedProfile.patientGender) setPatientGender(savedProfile.patientGender);
     }
-  }, [user]);
+  }, [isSignedIn, user]);
 
   const handleOpenBooking = (srv) => {
+    if (!isSignedIn) {
+      setAuthNotice("Please log in to your MediCare account first to book diagnostic services and proceed with payment.");
+      openLogin();
+      return;
+    }
+    setAuthNotice("");
     setSelectedService(srv);
     setBookingSuccess(false);
     setBookingError("");
@@ -240,22 +235,9 @@ function Service() {
       }
     } catch (e) {}
 
-    const clerkFullName =
-      user?.fullName ||
-      [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
-      user?.username ||
-      "";
-    const clerkEmail =
-      user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress || "";
-    const clerkPhone =
-      user?.primaryPhoneNumber?.phoneNumber ||
-      user?.phoneNumbers?.[0]?.phoneNumber ||
-      user?.unsafeMetadata?.phone ||
-      "";
-
-    setPatientName(clerkFullName || savedProfile.patientName || "");
-    setPatientEmail(clerkEmail || savedProfile.patientEmail || "");
-    setPatientMobile(clerkPhone || savedProfile.patientMobile || "");
+    setPatientName(user?.name || savedProfile.patientName || "");
+    setPatientEmail(user?.email || savedProfile.patientEmail || "");
+    setPatientMobile(user?.phone ? String(user?.phone).replace(/\D/g, "").slice(0, 10) : savedProfile.patientMobile || "");
     if (savedProfile.patientAge) setPatientAge(savedProfile.patientAge);
     if (savedProfile.patientGender) setPatientGender(savedProfile.patientGender);
 
@@ -278,13 +260,9 @@ function Service() {
     e.preventDefault();
 
     // 1. User must be logged in for payment
-    if (!user) {
+    if (!isSignedIn || !user?.id) {
       setBookingError("You must be logged in to proceed with payment and book a diagnostic service.");
-      try {
-        clerk.openSignIn();
-      } catch (err) {
-        window.location.href = "/login";
-      }
+      openLogin();
       return;
     }
 
@@ -403,15 +381,19 @@ function Service() {
       }
     } catch (err) {
       console.warn("Backend offline, saving service appointment locally:", err);
+      if (!user?.id) {
+        setBookingError("Authentication required. Please sign in to proceed.");
+        return;
+      }
       try {
         const fallbackSrv = {
           _id: `srv_app_${Date.now()}`,
           serviceId: selectedService._id,
           serviceName: selectedService.name,
           patientName,
-          email: patientEmail || user?.primaryEmailAddress?.emailAddress || "",
+          email: patientEmail || user?.email || "",
           mobile: patientMobile,
-          createdBy: user?.id || "guest_patient",
+          createdBy: user.id,
           date: selectedDate,
           time: selectedSlot || "10:00 AM",
           fees: selectedService.price || 499,
@@ -530,10 +512,14 @@ function Service() {
 
                     <button
                       onClick={() => handleOpenBooking(service)}
-                      className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs hover:shadow-md transition-all inline-flex items-center gap-1.5"
+                      className={`px-4 py-2.5 rounded-xl ${
+                        isSignedIn
+                          ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                          : "bg-emerald-700/90 hover:bg-emerald-700 text-white"
+                      } font-bold text-xs shadow-xs hover:shadow-md transition-all inline-flex items-center gap-1.5 cursor-pointer`}
                     >
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>Book Now</span>
+                      {isSignedIn ? <Calendar className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
+                      <span>{isSignedIn ? "Book Now" : "Login to Book"}</span>
                     </button>
                   </div>
                 </div>
@@ -582,30 +568,29 @@ function Service() {
                       Please arrive 15 minutes prior for sample registration.
                     </div>
                   </div>
+                ) : !isSignedIn ? (
+                  <div className="text-center py-10 px-4 space-y-4">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto shadow-xs">
+                      <Lock className="w-7 h-7" />
+                    </div>
+                    <h4 className="text-xl font-bold text-slate-800 dark:text-white">Authentication Required</h4>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                      You must be logged in to schedule diagnostic tests, complete payment, and book {selectedService.name}.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => openLogin()}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all cursor-pointer"
+                    >
+                      <Key className="w-4 h-4" />
+                      <span>Log In / Sign Up to Book</span>
+                    </button>
+                  </div>
                 ) : (
                   <form onSubmit={handleServiceBookingSubmit} className="space-y-5">
                     {bookingError && (
                       <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 text-sm font-semibold border border-red-200 dark:border-red-800">
                         {bookingError}
-                      </div>
-                    )}
-
-                    {/* Logged in check banner */}
-                    {!user && (
-                      <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 flex items-center justify-between gap-3 text-xs font-medium">
-                        <div className="flex items-center gap-2">
-                          <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                          <span>You must be logged in to proceed to payment and confirm booking.</span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            try { clerk.openSignIn(); } catch(e) { window.location.href = "/login"; }
-                          }}
-                          className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shrink-0 cursor-pointer shadow-xs transition-colors"
-                        >
-                          Log In
-                        </button>
                       </div>
                     )}
 
@@ -764,6 +749,20 @@ function Service() {
               </div>
 
             </div>
+          </div>
+        )}
+
+        {/* Floating Auth Notification Toast */}
+        {authNotice && (
+          <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-amber-600 text-white shadow-2xl flex items-center gap-3 max-w-md animate-bounce">
+            <Lock className="w-5 h-5 shrink-0 text-amber-100" />
+            <span className="text-xs sm:text-sm font-semibold">{authNotice}</span>
+            <button
+              onClick={() => setAuthNotice("")}
+              className="ml-auto text-xs uppercase font-bold text-amber-100 hover:text-white underline cursor-pointer shrink-0"
+            >
+              Dismiss
+            </button>
           </div>
         )}
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Phone,
   Mail,
@@ -11,9 +11,15 @@ import {
   CheckCircle2,
   Navigation,
   ShieldAlert,
+  Lock,
+  Key,
+  ShieldCheck,
 } from "lucide-react";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 function ContactPage() {
+  const { isSignedIn, user, openLogin } = useAuth();
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -25,6 +31,18 @@ function ContactPage() {
 
   const [errors, setErrors] = useState({});
   const [notification, setNotification] = useState({ type: "", text: "" });
+
+  // Auto-populate patient details when authenticated
+  useEffect(() => {
+    if (isSignedIn && user) {
+      setFormData((prev) => ({
+        ...prev,
+        fullName: prev.fullName || user.name || "",
+        email: prev.email || user.email || "",
+        phone: prev.phone || (user.phone ? String(user.phone).replace(/\D/g, "").slice(0, 10) : ""),
+      }));
+    }
+  }, [isSignedIn, user]);
 
   const departments = [
     "General Medicine",
@@ -85,9 +103,19 @@ function ContactPage() {
     }
   };
 
-  // 1. WhatsApp Query Action
+  // 1. WhatsApp Query Action (Guarded by Login)
   const handleSendWhatsApp = (e) => {
     e.preventDefault();
+
+    if (!isSignedIn) {
+      setNotification({
+        type: "error",
+        text: "Please log in to your MediCare account first to submit a query or contact our medical desk.",
+      });
+      openLogin();
+      return;
+    }
+
     if (!validate()) {
       setNotification({
         type: "error",
@@ -115,9 +143,19 @@ function ContactPage() {
     setTimeout(() => setNotification({ type: "", text: "" }), 4000);
   };
 
-  // 2. Email Query Action
+  // 2. Email Query Action (Guarded by Login)
   const handleSendEmail = (e) => {
     e.preventDefault();
+
+    if (!isSignedIn) {
+      setNotification({
+        type: "error",
+        text: "Please log in to your MediCare account first to submit a query or contact our medical desk.",
+      });
+      openLogin();
+      return;
+    }
+
     if (!validate()) {
       setNotification({
         type: "error",
@@ -179,6 +217,45 @@ function ContactPage() {
                   <p className="text-xs text-slate-500 dark:text-slate-400">Send your inquiry directly via WhatsApp or Email</p>
                 </div>
               </div>
+
+              {/* Authentication Status Banner */}
+              {!isSignedIn ? (
+                <div className="mt-4 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 shrink-0">
+                      <Lock className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-bold text-amber-900 dark:text-amber-200">
+                        Login Required to Submit Queries
+                      </h4>
+                      <p className="text-[11px] text-amber-700 dark:text-amber-300">
+                        Please sign in with your MediCare account before sending queries or contacting medical staff.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => openLogin()}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-xs transition-all shrink-0 cursor-pointer"
+                  >
+                    <Key className="w-3.5 h-3.5" />
+                    <span>Sign In to Continue</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="mt-4 p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-between gap-3 text-xs">
+                  <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>
+                      Logged in as <strong>{user?.name || "Patient"}</strong> {user?.email ? `(${user.email})` : ""}
+                    </span>
+                  </div>
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
+                    Verified Patient
+                  </span>
+                </div>
+              )}
 
               {/* Notification Banner */}
               {notification.text && (
@@ -314,19 +391,27 @@ function ContactPage() {
                   <button
                     type="button"
                     onClick={handleSendWhatsApp}
-                    className="w-full py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className={`w-full py-3.5 px-4 rounded-2xl ${
+                      isSignedIn
+                        ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                        : "bg-emerald-700/90 hover:bg-emerald-700 text-white"
+                    } active:scale-98 font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer`}
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Send via WhatsApp</span>
+                    {isSignedIn ? <Send className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                    <span>{isSignedIn ? "Send via WhatsApp" : "Sign In & Send WhatsApp"}</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={handleSendEmail}
-                    className="w-full py-3.5 px-4 rounded-2xl bg-teal-600 hover:bg-teal-700 active:scale-98 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className={`w-full py-3.5 px-4 rounded-2xl ${
+                      isSignedIn
+                        ? "bg-teal-600 hover:bg-teal-700 text-white"
+                        : "bg-teal-700/90 hover:bg-teal-700 text-white"
+                    } active:scale-98 font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer`}
                   >
-                    <Mail className="w-4 h-4" />
-                    <span>Send via Email</span>
+                    {isSignedIn ? <Mail className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                    <span>{isSignedIn ? "Send via Email" : "Sign In & Send Email"}</span>
                   </button>
                 </div>
               </form>

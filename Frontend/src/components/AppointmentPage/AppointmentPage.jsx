@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { useUser } from "@clerk/clerk-react";
 import {
   Calendar,
   Clock,
@@ -15,11 +14,14 @@ import {
   RefreshCw,
   ArrowRight,
   Phone,
+  Lock,
+  Key,
 } from "lucide-react";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 function AppointmentPage() {
   const [searchParams] = useSearchParams();
-  const { user, isLoaded, isSignedIn } = useUser();
+  const { user, isLoaded, isSignedIn, openLogin } = useAuth();
   const [activeTab, setActiveTab] = useState("doctor"); // "doctor" | "service"
   const [doctorAppointments, setDoctorAppointments] = useState([]);
   const [serviceAppointments, setServiceAppointments] = useState([]);
@@ -65,8 +67,8 @@ function AppointmentPage() {
     if (!isLoaded) return;
     setLoading(true);
 
-    const clerkUserId = user?.id || null;
-    const userEmail = user?.primaryEmailAddress?.emailAddress || null;
+    const userId = user?.id || null;
+    const userEmail = user?.email || null;
 
     let serverDocs = [];
     let serverSrvs = [];
@@ -81,11 +83,11 @@ function AppointmentPage() {
 
     try {
       const docParams = new URLSearchParams();
-      if (clerkUserId) docParams.append("createdBy", clerkUserId);
+      if (userId) docParams.append("createdBy", userId);
       if (userEmail) docParams.append("email", userEmail);
 
       const srvParams = new URLSearchParams();
-      if (clerkUserId) srvParams.append("createdBy", clerkUserId);
+      if (userId) srvParams.append("createdBy", userId);
       if (userEmail) srvParams.append("email", userEmail);
 
       const resDoc = await fetch(`${API_BASE_URL}/appointments?${docParams.toString()}`);
@@ -107,7 +109,7 @@ function AppointmentPage() {
     try {
       const isUserMatch = (item) => {
         if (!item) return false;
-        if (clerkUserId && item.createdBy === clerkUserId) return true;
+        if (userId && item.createdBy === userId) return true;
         if (userEmail && item.email && item.email.toLowerCase() === userEmail.toLowerCase()) return true;
         return false;
       };
@@ -235,14 +237,24 @@ function AppointmentPage() {
         </div>
 
         {!isSignedIn && isLoaded ? (
-          <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 p-8 space-y-4">
-            <div className="w-16 h-16 rounded-3xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto">
-              <User className="w-8 h-8" />
+          <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 p-8 space-y-5">
+            <div className="w-16 h-16 rounded-3xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-xs">
+              <Lock className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">Sign in to view your appointments</h3>
-            <p className="text-slate-500 dark:text-slate-400 text-sm max-w-md mx-auto">
-              Please sign in with your account to access your personal scheduled consultations, diagnostic bookings, and receipts.
-            </p>
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">Sign in to view your appointments</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm max-w-md mx-auto">
+                Please sign in with your MediCare account to access your personal scheduled consultations, diagnostic bookings, and receipts.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => openLogin()}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer"
+            >
+              <Key className="w-4 h-4" />
+              <span>Sign In Now</span>
+            </button>
           </div>
         ) : (
           <>

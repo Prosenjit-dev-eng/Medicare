@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Key, Mail, Lock, User, Phone, CheckCircle2, ArrowRight, ShieldCheck, Sun, Moon } from "lucide-react";
+import { useAuth } from "../../context/AuthContext.jsx";
 import logo from "../../assets/logo.png";
 
 function LoginPage() {
+  const { openLogin } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -62,6 +64,7 @@ function LoginPage() {
         if (data.token) {
           localStorage.setItem("medicare_patient_token", data.token);
           localStorage.setItem("medicare_patient_user", JSON.stringify(data.user));
+          window.dispatchEvent(new Event("medicare_auth_change"));
         }
         setMessage({ type: "success", text: data.message || "Authentication successful!" });
         setTimeout(() => {
@@ -78,6 +81,7 @@ function LoginPage() {
         "medicare_patient_user",
         JSON.stringify({ name: formData.name || "Patient User", email: formData.email })
       );
+      window.dispatchEvent(new Event("medicare_auth_change"));
       setMessage({ type: "success", text: "Logged in successfully (Demo Session)" });
       setTimeout(() => {
         navigate("/appointments");
@@ -211,6 +215,15 @@ function LoginPage() {
           >
             <span>{loading ? "Processing..." : isRegister ? "Create Account" : "Sign In"}</span>
             <ArrowRight className="w-4 h-4" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => openLogin()}
+            className="w-full py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-emerald-500 text-slate-700 dark:text-slate-200 font-bold text-xs shadow-2xs hover:shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer mt-3"
+          >
+            <Key className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Or Sign In with Clerk / Google</span>
           </button>
         </form>
 
