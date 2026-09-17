@@ -61,7 +61,7 @@ function HomeDoctors() {
   const [doctors, setDoctors] = useState(featuredDoctors);
   const [isLoading, setIsLoading] = useState(false);
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://medicare-backend-93w9.onrender.com/api";
 
   useEffect(() => {
     let isMounted = true;

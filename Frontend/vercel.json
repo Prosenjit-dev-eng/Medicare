@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/admin/:match*",
-      "destination": "https://vercel.app*"
+      "destination": "https://medicare-admin-psi.vercel.app/:match*"
     },
     {
       "source": "/(.*)",

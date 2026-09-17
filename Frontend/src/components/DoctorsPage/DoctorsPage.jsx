@@ -169,7 +169,7 @@ function DoctorsPage() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingError, setBookingError] = useState("");
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://medicare-backend-93w9.onrender.com/api";
 
   // 1. Initial Fetch on Mount with proper [] dependency array
   useEffect(() => {

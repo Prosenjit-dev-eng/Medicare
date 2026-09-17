@@ -254,7 +254,7 @@ function Footer() {
             <Link to="/contact" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
             <Link to="/contact" className="hover:text-slate-400 transition-colors">Terms of Service</Link>
             <a
-              href={import.meta.env.VITE_ADMIN_URL || "http://localhost:5174"}
+              href={import.meta.env.VITE_ADMIN_URL || "https://medicare-admin-psi.vercel.app"}
               target="_blank"
               rel="noopener noreferrer"
               className="text-emerald-400 font-semibold hover:underline"

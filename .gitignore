@@ -23,12 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-<<<<<<< HEAD
-.env
-=======
-.env
-.env.production
->>>>>>> 8e92d77a257f07aaf6748cdb48de38f50a8b66bf
-
 .env
 .env.production

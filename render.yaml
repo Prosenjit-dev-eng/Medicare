@@ -13,6 +13,8 @@ services:
         generateValue: true
       - key: FRONTEND_URL
         sync: false
+      - key: ADMIN_URL
+        sync: false
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: CLOUDINARY_CLOUD_NAME
@@ -40,6 +42,8 @@ services:
     envVars:
       - key: VITE_CLERK_PUBLISHABLE_KEY
         sync: false
+      - key: VITE_ADMIN_URL
+        sync: false
       - key: VITE_API_BASE_URL
         fromService:
           type: web
@@ -57,8 +61,10 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
+    envVars:
       - key: VITE_API_BASE_URL
         fromService:
           type: web
           name: medicare-backend
           property: host
+

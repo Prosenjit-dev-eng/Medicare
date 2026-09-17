@@ -47,7 +47,7 @@ function LoginPage() {
     setLoading(true);
     setMessage({ type: "", text: "" });
 
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://medicare-backend-93w9.onrender.com/api";
     const endpoint = isRegister ? "/users/register" : "/users/login";
 
     try {
@@ -234,7 +234,7 @@ function LoginPage() {
         {/* Doctor Admin Redirection */}
         <div className="mt-4 text-center">
           <a
-            href="http://localhost:5174"
+            href={import.meta.env.VITE_ADMIN_URL || "https://medicare-admin-psi.vercel.app"}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-400 hover:text-emerald-600 transition-colors"

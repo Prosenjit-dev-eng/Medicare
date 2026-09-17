@@ -20,7 +20,10 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5175",
   "https://medicare-frontend-sooty.vercel.app",
-];
+  "https://medicare-admin-psi.vercel.app",
+  process.env.FRONTEND_URL,
+  process.env.ADMIN_URL,
+].filter(Boolean);
 
 // CORS Middleware
 app.use(
