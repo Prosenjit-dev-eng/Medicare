@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, useClerk } from "@clerk/clerk-react";
 import {
   Activity,
   Calendar,
@@ -11,6 +11,7 @@ import {
   Search,
   Sparkles,
   ShieldCheck,
+  ShieldAlert,
   FileText,
 } from "lucide-react";
 import S1 from "../../assets/S1.png";
@@ -139,6 +140,7 @@ const fallbackServices = [
 
 function Service() {
   const { user } = useUser();
+  const clerk = useClerk();
   const [services, setServices] = useState(fallbackServices);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -274,8 +276,43 @@ function Service() {
 
   const handleServiceBookingSubmit = async (e) => {
     e.preventDefault();
-    if (!patientName || !patientMobile || !selectedDate) {
-      setBookingError("Please fill in patient name, phone, and date.");
+
+    // 1. User must be logged in for payment
+    if (!user) {
+      setBookingError("You must be logged in to proceed with payment and book a diagnostic service.");
+      try {
+        clerk.openSignIn();
+      } catch (err) {
+        window.location.href = "/login";
+      }
+      return;
+    }
+
+    if (!patientName.trim()) {
+      setBookingError("Please enter the patient's full name.");
+      return;
+    }
+
+    // 2. Exact 10 digits for mobile number
+    const cleanMobile = patientMobile.replace(/\D/g, "");
+    if (!cleanMobile) {
+      setBookingError("Mobile number is required.");
+      return;
+    }
+    if (cleanMobile.length !== 10) {
+      setBookingError("Mobile number must contain exactly 10 digits (e.g. 9876543210).");
+      return;
+    }
+
+    // 3. Email must contain @
+    const emailTrim = patientEmail.trim();
+    if (!emailTrim || !emailTrim.includes("@") || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrim)) {
+      setBookingError("Please enter a valid email address containing '@' (e.g. patient@example.com).");
+      return;
+    }
+
+    if (!selectedDate) {
+      setBookingError("Please select a preferred service date.");
       return;
     }
 
@@ -553,6 +590,25 @@ function Service() {
                       </div>
                     )}
 
+                    {/* Logged in check banner */}
+                    {!user && (
+                      <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 flex items-center justify-between gap-3 text-xs font-medium">
+                        <div className="flex items-center gap-2">
+                          <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
+                          <span>You must be logged in to proceed to payment and confirm booking.</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            try { clerk.openSignIn(); } catch(e) { window.location.href = "/login"; }
+                          }}
+                          className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shrink-0 cursor-pointer shadow-xs transition-colors"
+                        >
+                          Log In
+                        </button>
+                      </div>
+                    )}
+
                     {/* Patient Name & Phone */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
@@ -571,26 +627,31 @@ function Service() {
 
                       <div>
                         <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                          Phone Number *
+                          Phone Number (Exact 10 Digits) *
                         </label>
                         <input
                           type="tel"
                           required
+                          maxLength={10}
                           placeholder="9876543210"
                           value={patientMobile}
-                          onChange={(e) => setPatientMobile(e.target.value)}
+                          onChange={(e) => setPatientMobile(e.target.value.replace(/\D/g, "").slice(0, 10))}
                           className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
                         />
+                        <span className="text-[11px] text-slate-400 mt-1 block">
+                          {patientMobile.replace(/\D/g, "").length}/10 digits
+                        </span>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                          Email Address (Optional)
+                          Email Address (Must contain '@') *
                         </label>
                         <input
                           type="email"
+                          required
                           placeholder="patient@example.com"
                           value={patientEmail}
                           onChange={(e) => setPatientEmail(e.target.value)}

@@ -23,6 +23,7 @@ function ContactPage() {
     message: "",
   });
 
+  const [errors, setErrors] = useState({});
   const [notification, setNotification] = useState({ type: "", text: "" });
 
   const departments = [
@@ -47,15 +48,52 @@ function ContactPage() {
     "Other Diagnostic Query",
   ];
 
+  const validate = () => {
+    const errs = {};
+    if (!formData.fullName.trim()) {
+      errs.fullName = "Please enter your Full Name.";
+    }
+
+    const cleanPhone = (formData.phone || "").replace(/\D/g, "");
+    if (!cleanPhone) {
+      errs.phone = "Phone number is required.";
+    } else if (cleanPhone.length !== 10) {
+      errs.phone = "Mobile number must contain exactly 10 digits (e.g. 9876543210).";
+    }
+
+    const emailTrim = (formData.email || "").trim();
+    if (!emailTrim) {
+      errs.email = "Email address is required.";
+    } else if (!emailTrim.includes("@") || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrim)) {
+      errs.email = "Email address must contain '@' and a valid domain (e.g. user@example.com).";
+    }
+
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "phone") {
+      const digits = value.replace(/\D/g, "").slice(0, 10);
+      setFormData({ ...formData, phone: digits });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: "" });
+    }
   };
 
   // 1. WhatsApp Query Action
   const handleSendWhatsApp = (e) => {
     e.preventDefault();
-    if (!formData.fullName || !formData.phone) {
-      alert("Please enter your Full Name and Phone Number for WhatsApp inquiry.");
+    if (!validate()) {
+      setNotification({
+        type: "error",
+        text: "Please provide a valid 10-digit mobile number and an email containing '@' to proceed.",
+      });
+      setTimeout(() => setNotification({ type: "", text: "" }), 4000);
       return;
     }
 
@@ -80,8 +118,12 @@ function ContactPage() {
   // 2. Email Query Action
   const handleSendEmail = (e) => {
     e.preventDefault();
-    if (!formData.fullName) {
-      alert("Please enter your Full Name.");
+    if (!validate()) {
+      setNotification({
+        type: "error",
+        text: "Please provide a valid 10-digit mobile number and an email containing '@' to proceed.",
+      });
+      setTimeout(() => setNotification({ type: "", text: "" }), 4000);
       return;
     }
 
@@ -144,7 +186,9 @@ function ContactPage() {
                   className={`mt-4 p-4 rounded-2xl flex items-center gap-3 text-sm font-semibold border ${
                     notification.type === "whatsapp"
                       ? "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-900 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800"
-                      : "bg-teal-100 dark:bg-teal-950/80 text-teal-900 dark:text-teal-200 border-teal-300 dark:border-teal-800"
+                      : notification.type === "email"
+                      ? "bg-teal-100 dark:bg-teal-950/80 text-teal-900 dark:text-teal-200 border-teal-300 dark:border-teal-800"
+                      : "bg-red-100 dark:bg-red-950/80 text-red-900 dark:text-red-200 border-red-300 dark:border-red-800"
                   }`}
                 >
                   <CheckCircle2 className="w-5 h-5 shrink-0" />
@@ -166,28 +210,39 @@ function ContactPage() {
                       placeholder="Jane Doe"
                       value={formData.fullName}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
+                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border ${
+                        errors.fullName ? "border-red-500 focus:ring-red-500" : "border-slate-200 dark:border-slate-700 focus:ring-emerald-500"
+                      } focus:outline-none focus:ring-2 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm`}
                     />
+                    {errors.fullName && <p className="text-red-500 text-xs mt-1 font-medium">{errors.fullName}</p>}
                   </div>
 
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                      Phone / WhatsApp Number
+                      Phone Number (Exact 10 Digits) *
                     </label>
                     <input
                       type="tel"
                       name="phone"
+                      maxLength={10}
                       placeholder="9876543210"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
+                      className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border ${
+                        errors.phone ? "border-red-500 focus:ring-red-500" : "border-slate-200 dark:border-slate-700 focus:ring-emerald-500"
+                      } focus:outline-none focus:ring-2 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm`}
                     />
+                    {errors.phone ? (
+                      <p className="text-red-500 text-xs mt-1 font-medium">{errors.phone}</p>
+                    ) : (
+                      <p className="text-[11px] text-slate-400 mt-1">{formData.phone.length}/10 digits</p>
+                    )}
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                    Email Address
+                    Email Address (Must contain '@') *
                   </label>
                   <input
                     type="email"
@@ -195,8 +250,11 @@ function ContactPage() {
                     placeholder="jane@example.com"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm"
+                    className={`w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border ${
+                      errors.email ? "border-red-500 focus:ring-red-500" : "border-slate-200 dark:border-slate-700 focus:ring-emerald-500"
+                    } focus:outline-none focus:ring-2 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm`}
                   />
+                  {errors.email && <p className="text-red-500 text-xs mt-1 font-medium">{errors.email}</p>}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

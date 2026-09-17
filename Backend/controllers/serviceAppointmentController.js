@@ -52,13 +52,39 @@ export const createServiceAppointment = async (req, res) => {
       });
     }
 
+    // 1. Exact 10 digits mobile number
+    const cleanMobile = String(mobile || "").replace(/\D/g, "");
+    if (cleanMobile.length !== 10) {
+      return res.status(400).json({
+        success: false,
+        message: "Mobile number must contain exactly 10 digits.",
+      });
+    }
+
+    // 2. Email must contain '@'
+    const emailTrim = String(email || "").trim();
+    if (!emailTrim || !emailTrim.includes("@") || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrim)) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid email address containing '@' is required.",
+      });
+    }
+
+    // 3. User must be logged in for payment
+    const userId = createdBy || req.user?.id || req.auth?.userId;
+    if (!userId || userId === "guest_patient") {
+      return res.status(401).json({
+        success: false,
+        message: "You must be logged in to proceed with payment and book a diagnostic service.",
+      });
+    }
+
     const service = await Service.findById(serviceId);
     if (!service) {
       return res.status(404).json({ success: false, message: "Diagnostic service not found" });
     }
 
     const cost = Number(fees) || Number(service.price) || 499;
-    const userId = createdBy || req.user?.id || req.auth?.userId || "guest_patient";
 
     const newAppointment = new ServiceAppointment({
       createdBy: userId,
